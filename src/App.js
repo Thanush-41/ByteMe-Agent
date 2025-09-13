@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTE_ACTIONS, getCurrentAction } from './constants/routeConstants';
 import Sidebar from './components/Sidebar';
@@ -54,10 +54,13 @@ import BonafideCertificate from './pages/BonafideCertificate';
 import NoDues from './pages/print-forms/NoDues';
 import TCForm from './pages/print-forms/TCForm';
 import './styles/App.css';
+import LoginPage from './pages/LoginPage';
+import TeacherDashboard from './pages/TeacherDashboard';
 
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [loginState, setLoginState] = useState(null); // null, 'student', 'teacher'
   
   // Get the action from URL query parameters using the helper function
   const action = getCurrentAction(location);
@@ -70,6 +73,19 @@ function AppContent() {
     }
   };
 
+  const handleLogout = () => {
+    setLoginState(null);
+    navigate('/');
+  };
+
+  if (!loginState) {
+    return <LoginPage onLogin={setLoginState} />;
+  }
+  if (loginState === 'teacher') {
+    return <TeacherDashboard onLogout={handleLogout} />;
+  }
+
+  // Student portal
   const renderContent = () => {
     switch (action) {
       case ROUTE_ACTIONS.DASHBOARD:
@@ -204,7 +220,7 @@ function AppContent() {
         onSectionChange={handleSectionChange}
       />
       <div className="main-content">
-        <Header currentSection={action} />
+        <Header currentSection={action} onLogout={handleLogout} />
         <div className="content-area">
           {renderContent()}
         </div>

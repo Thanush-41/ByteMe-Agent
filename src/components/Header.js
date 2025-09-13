@@ -1,7 +1,13 @@
 import React from 'react';
 import './Header.css';
 
-const Header = ({ currentSection }) => {
+const Header = ({ currentSection, onLogout }) => {
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+    }
+  };
+
   return (
     <div className="header">
       <div className="header-left">
@@ -21,12 +27,12 @@ const Header = ({ currentSection }) => {
         <div className="user-profile">
           <div className="user-avatar">👤</div>
           <div className="user-info">
-            <span className="user-name">Thanush</span>
+            <span className="user-name">Student</span>
           </div>
         </div>
         
         <div className="header-actions">
-          <button className="sign-out-btn">Sign out</button>
+          <button className="sign-out-btn" onClick={handleLogout}>Sign out</button>
         </div>
       </div>
     </div>

@@ -1,0 +1,30 @@
+/* Teacher Placeholder Styles */
+.teacher-placeholder-bg {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff 60%, #f5f8fa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teacher-placeholder-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 48px 40px;
+  text-align: center;
+}
+
+.teacher-placeholder-card h2 {
+  font-size: 2rem;
+  color: #2056a7;
+  font-family: 'Merriweather', serif;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.coming-soon {
+  color: #d72660;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
