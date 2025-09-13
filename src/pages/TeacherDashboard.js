@@ -1,416 +1,278 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { findRouteByKey } from '../constants/teacherRoutes';
 import './TeacherDashboard.css';
 
-const TeacherDashboard = ({ onLogout }) => {
-  const [activeSection, setActiveSection] = useState('dashboard');
-  const [sidebarHovered, setSidebarHovered] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState({});
+const TeacherDashboard = () => {
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const navigate = useNavigate();
 
-  // Navigation handler
-  const handleNavigation = (key) => {
-    setActiveSection(key);
-  };
-
-  // Toggle submenu
-  const toggleMenu = (key) => {
-    setExpandedMenus(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
-
-  // Sidebar menu items
-  const sidebarItems = [
-    { 
-      key: 'dashboard', 
-      icon: '🏠', 
-      label: 'Dashboard',
-      hasSubmenu: false
-    },
-    {
-      key: 'academics',
-      icon: '📚',
-      label: 'Academics',
-      hasSubmenu: true,
-      submenu: [
-        { key: 'nominal-rolls', label: 'Nominal Rolls' },
-        { key: 'time-table', label: 'Time Table' },
-        { key: 'staff-timetable', label: 'Staff Timetable' },
-        { key: 'ict-studio', label: 'ICT Studio Slot Booking' },
-        { key: 'aat-registration', label: 'AAT Registration' },
-        { key: 'attendance-register', label: 'Attendance Register' },
-        { key: 'project-approval', label: 'Project Approval' },
-        { key: 'project-titles', label: 'Project Titles' },
-        { key: 'schedule-instructions', label: 'Schedule of Instructions' },
-        { key: 'lor-request', label: 'LOR Request' },
-        { key: 'attending-activity', label: 'Attending Activity / Events' },
-        { key: 'accession-register', label: 'Accession Register' },
-        { key: 'library-books', label: 'Library Books Issued' }
-      ]
-    },
-    {
-      key: 'evaluations',
-      icon: '📝',
-      label: 'Evaluations',
-      hasSubmenu: true,
-      submenu: [
-        { key: 'aat', label: 'AAT' },
-        { key: 'aat-ii', label: 'AAT-II' },
-        { key: 'evaluation-marks', label: 'Evaluation Marks' }
-      ]
-    },
-    {
-      key: 'labs',
-      icon: '⚗️',
-      label: 'Labs',
-      hasSubmenu: true,
-      submenu: [
-        { key: 'see-lab', label: 'SEE Lab' },
-        { key: 'lab-marks', label: 'Lab Marks' },
-        { key: 'lab-evaluation', label: 'Lab Evaluation' },
-        { key: 'lab-experiments', label: 'Lab Experiments' }
-      ]
-    },
-    {
-      key: 'payroll',
-      icon: '💰',
-      label: 'Payroll',
-      hasSubmenu: true,
-      submenu: [
-        { key: 'tds', label: 'TDS' },
-        { key: 'pay-slip', label: 'Pay Slip' },
-        { key: 'incentives', label: 'Incentives' },
-        { key: 'funded-incentives', label: 'Funded Incentives' },
-        { key: 'arrear', label: 'Arrear' },
-        { key: 'partly-payment', label: 'Partly Payment Details' },
-        { key: 'remuneration', label: 'Remuneration' }
-      ]
-    },
-    {
-      key: 'reports',
-      icon: '📊',
-      label: 'Reports',
-      hasSubmenu: false
-    },
-    {
-      key: 'question-paper',
-      icon: '📄',
-      label: 'Question Paper & Scheme of Evaluation',
-      hasSubmenu: false
-    },
-    {
-      key: 'leave',
-      icon: '🏖️',
-      label: 'Leave',
-      hasSubmenu: false
-    },
-    {
-      key: 'faculty-uploads',
-      icon: '📤',
-      label: 'Faculty Uploads',
-      hasSubmenu: false
-    },
-    {
-      key: 'biometric',
-      icon: '👆',
-      label: 'Biometric',
-      hasSubmenu: false
-    },
-    {
-      key: 'service-register',
-      icon: '📋',
-      label: 'Service Register',
-      hasSubmenu: false
-    },
-    {
-      key: 'personal-info',
-      icon: '👤',
-      label: 'Personal Information',
-      hasSubmenu: true,
-      submenu: [
-        { key: 'edit-personal-details', label: 'Edit Personal Details' },
-        { key: 'academic-identity', label: 'Academic Identity' },
-        { key: 'professional-membership', label: 'Professional Membership' },
-        { key: 'competency-building-visits', label: 'Competency Building Visits' },
-        { key: 'professional-experience', label: 'Professional Experience' },
-        { key: 'academic-qualifications', label: 'Academic Qualifications' },
-        { key: 'honours-awards', label: 'Honours / Awards' }
-      ]
-    },
-    {
-      key: 'research-publications',
-      icon: '🔬',
-      label: 'Research & Publications',
-      hasSubmenu: true,
-      submenu: [
-        { key: 'textbooks', label: 'Textbooks' },
-        { key: 'journal-articles', label: 'Journal Articles' },
-        { key: 'professional-training', label: 'Professional Training Attended' },
-        { key: 'ipr-patents', label: 'IPR (Patents / Copyrights)' },
-        { key: 'fdp-sttp', label: 'FDP / STTP Attended' },
-        { key: 'conference-papers', label: 'Conference Papers' },
-        { key: 'research-guidance', label: 'Research Guidance' },
-        { key: 'moocs-training', label: 'MOOCs / QIP / Industry Training' }
-      ]
-    }
-  ];
-
-  // Render main content based on active section
-  const renderMainContent = () => {
-    switch (activeSection) {
-      case 'dashboard':
-        return (
-          <>
-            <div className="dashboard-stats">
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <div className="stat-number">125</div>
-                  <div className="stat-label">Total Students</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-number">8</div>
-                  <div className="stat-label">Active Courses</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-number">45</div>
-                  <div className="stat-label">Assignments</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-number">92%</div>
-                  <div className="stat-label">Attendance Rate</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="dashboard-grid">
-              <div className="dashboard-section">
-                <h3>Recent Activities</h3>
-                <div className="activity-list">
-                  <div className="activity-item">
-                    <div className="activity-icon">📚</div>
-                    <div className="activity-content">
-                      <div className="activity-title">New assignment posted</div>
-                      <div className="activity-time">2 hours ago</div>
-                    </div>
-                  </div>
-                  <div className="activity-item">
-                    <div className="activity-icon">✅</div>
-                    <div className="activity-content">
-                      <div className="activity-title">Attendance marked for CS101</div>
-                      <div className="activity-time">4 hours ago</div>
-                    </div>
-                  </div>
-                  <div className="activity-item">
-                    <div className="activity-icon">📊</div>
-                    <div className="activity-content">
-                      <div className="activity-title">Grades updated for midterm</div>
-                      <div className="activity-time">1 day ago</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="dashboard-section">
-                <h3>Upcoming Events</h3>
-                <div className="events-list">
-                  <div className="event-item">
-                    <div className="event-date">
-                      <div className="event-day">15</div>
-                      <div className="event-month">NOV</div>
-                    </div>
-                    <div className="event-details">
-                      <div className="event-title">Faculty Meeting</div>
-                      <div className="event-time">10:00 AM - 11:30 AM</div>
-                    </div>
-                  </div>
-                  <div className="event-item">
-                    <div className="event-date">
-                      <div className="event-day">18</div>
-                      <div className="event-month">NOV</div>
-                    </div>
-                    <div className="event-details">
-                      <div className="event-title">Project Presentations</div>
-                      <div className="event-time">2:00 PM - 5:00 PM</div>
-                    </div>
-                  </div>
-                  <div className="event-item">
-                    <div className="event-date">
-                      <div className="event-day">22</div>
-                      <div className="event-month">NOV</div>
-                    </div>
-                    <div className="event-details">
-                      <div className="event-title">End Semester Exams Begin</div>
-                      <div className="event-time">9:00 AM onwards</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="dashboard-section">
-                <h3>Quick Links</h3>
-                <div className="quick-links">
-                  <div className="quick-link-item" onClick={() => handleNavigation('attendance-register')}>
-                    <div className="quick-link-icon">📊</div>
-                    <div className="quick-link-label">Attendance</div>
-                  </div>
-                  <div className="quick-link-item" onClick={() => handleNavigation('aat')}>
-                    <div className="quick-link-icon">📝</div>
-                    <div className="quick-link-label">Evaluations</div>
-                  </div>
-                  <div className="quick-link-item" onClick={() => handleNavigation('time-table')}>
-                    <div className="quick-link-icon">📅</div>
-                    <div className="quick-link-label">Timetable</div>
-                  </div>
-                  <div className="quick-link-item" onClick={() => handleNavigation('reports')}>
-                    <div className="quick-link-icon">📈</div>
-                    <div className="quick-link-label">Reports</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="dashboard-section announcements">
-                <h3>Announcements</h3>
-                <div className="announcements-list">
-                  <div className="announcement-item">
-                    <div className="announcement-title">Holiday Notice</div>
-                    <div className="announcement-content">
-                      Campus will be closed on November 20th for maintenance work.
-                    </div>
-                    <div className="announcement-time">3 days ago</div>
-                  </div>
-                  <div className="announcement-item">
-                    <div className="announcement-title">New Portal Update</div>
-                    <div className="announcement-content">
-                      Faculty portal has been updated with new features for better user experience.
-                    </div>
-                    <div className="announcement-time">1 week ago</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
-        );
-      
-      default:
-        // Find the route info from TEACHER_ROUTES
-        const routeInfo = findRouteByKey(activeSection);
-        if (routeInfo) {
-          return (
-            <div className="page-content">
-              <h2>{routeInfo.title}</h2>
-              <p>{routeInfo.description}</p>
-            </div>
-          );
-        }
-        
-        return (
-          <div className="page-content">
-            <h2>Page Not Found</h2>
-            <p>The requested page could not be found.</p>
-          </div>
-        );
+  const handleNavigation = (routeKey) => {
+    const route = findRouteByKey(routeKey);
+    if (route) {
+      navigate(route.path);
     }
   };
 
   return (
     <div className="teacher-dashboard">
-      {/* Sidebar */}
       <div 
-        className="teacher-sidebar"
-        onMouseEnter={() => setSidebarHovered(true)}
-        onMouseLeave={() => {
-          setSidebarHovered(false);
-          setExpandedMenus({});
-        }}
+        className={`teacher-sidebar ${isSidebarExpanded ? 'expanded' : 'collapsed'}`}
+        onMouseEnter={() => setIsSidebarExpanded(true)}
+        onMouseLeave={() => setIsSidebarExpanded(false)}
       >
-        <div className="sidebar-header">
-          <div className="logo-container">
-            <img src="/api/placeholder/40/40" alt="IARE" className="logo-img" />
-            <span className="logo-text">IARE</span>
-          </div>
-        </div>
-        
-        <div className="search-container">
-          <input 
-            type="text" 
-            placeholder="Search for menu.." 
-            className="sidebar-search"
-          />
-        </div>
-
-        <nav className="sidebar-nav">
-          {sidebarItems.map(item => (
-            <div key={item.key} className="nav-group">
-              <div 
-                className={`nav-item ${activeSection === item.key ? 'active' : ''}`}
-                onClick={() => {
-                  handleNavigation(item.key);
-                  if (item.hasSubmenu && sidebarHovered) {
-                    toggleMenu(item.key);
-                  }
-                }}
-              >
-                <span className="nav-icon">{item.icon}</span>
-                <span className="nav-label">{item.label}</span>
-                {item.hasSubmenu && (
-                  <span className={`nav-arrow ${expandedMenus[item.key] ? 'expanded' : ''}`}>
-                    ▼
-                  </span>
-                )}
-              </div>
-              
-              {item.hasSubmenu && expandedMenus[item.key] && (
-                <div className="submenu">
-                  {item.submenu.map((subItem, index) => (
-                    <div 
-                      key={index} 
-                      className={`submenu-item ${activeSection === subItem.key ? 'active' : ''}`}
-                      onClick={() => handleNavigation(subItem.key)}
-                    >
-                      <span className="submenu-dot">●</span>
-                      <span className="submenu-label">{subItem.label}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+        <div className="sidebar-content">
+          <div className="sidebar-header">
+            <div className="logo-container">
+              <div className="logo-img">📚</div>
+              <span className="logo-text">School Portal</span>
             </div>
-          ))}
-        </nav>
+          </div>
+          
+          <nav className="sidebar-nav">
+            <div className="nav-item" onClick={() => handleNavigation('dashboard')}>
+              <span className="nav-icon">🏠</span>
+              <span className="nav-label">Dashboard</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('academics')}>
+              <span className="nav-icon">📚</span>
+              <span className="nav-label">Academics</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('nominal-rolls')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Nominal Rolls</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('time-table')}>
+              <span className="nav-icon">⏰</span>
+              <span className="nav-label">Time Table</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('staff-timetable')}>
+              <span className="nav-icon">👥</span>
+              <span className="nav-label">Staff Timetable</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('ict-studio')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">ICT Studio</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('aat-registration')}>
+              <span className="nav-icon">📝</span>
+              <span className="nav-label">AAT Registration</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('attendance-register')}>
+              <span className="nav-icon">✅</span>
+              <span className="nav-label">Attendance Register</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('project-approval')}>
+              <span className="nav-icon">👍</span>
+              <span className="nav-label">Project Approval</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('project-titles')}>
+              <span className="nav-icon">📑</span>
+              <span className="nav-label">Project Titles</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('schedule-instructions')}>
+              <span className="nav-icon">📅</span>
+              <span className="nav-label">Schedule Instructions</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('lor-request')}>
+              <span className="nav-icon">📄</span>
+              <span className="nav-label">LOR Request</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('attending-activity')}>
+              <span className="nav-icon">🎯</span>
+              <span className="nav-label">Attending Activity</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('accession-register')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Accession Register</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('library-books')}>
+              <span className="nav-icon">📖</span>
+              <span className="nav-label">Library Books</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('evaluations')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Evaluations</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('labs')}>
+              <span className="nav-icon">🔬</span>
+              <span className="nav-label">Labs</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('tds')}>
+              <span className="nav-icon">💰</span>
+              <span className="nav-label">TDS</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('pay-slip')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Pay Slip</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('incentives')}>
+              <span className="nav-icon">🎁</span>
+              <span className="nav-label">Incentives</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('funded-incentives')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Funded Incentives</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('arrear')}>
+              <span className="nav-icon">⏳</span>
+              <span className="nav-label">Arrear</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('partly-payment')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Partly Payment</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('remuneration')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Remuneration</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('reports')}>
+              <span className="nav-icon">📈</span>
+              <span className="nav-label">Reports</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('question-paper')}>
+              <span className="nav-icon">❓</span>
+              <span className="nav-label">Question Paper</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('leave')}>
+              <span className="nav-icon">🏖️</span>
+              <span className="nav-label">Leave</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('faculty-uploads')}>
+              <span className="nav-icon">⬆️</span>
+              <span className="nav-label">Faculty Uploads</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('biometric')}>
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Biometric</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('service-register')}>
+              <span className="nav-icon">📋</span>
+              <span className="nav-label">Service Register</span>
+            </div>
+            
+            <div className="nav-item" onClick={() => handleNavigation('logout')}>
+              <span className="nav-icon">🚪</span>
+              <span className="nav-label">Logout</span>
+            </div>
+          </nav>
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="teacher-main">
-        {/* Header */}
-        <header className="teacher-header">
-          <div className="header-left">
-            <button className="menu-btn">☰</button>
-            <span className="breadcrumb-text">&lt;Faculty&gt;</span>
-            <nav className="header-nav">
-              <span className="nav-link">Home</span>
-              <span className="nav-link">Contact</span>
-              <span className="nav-link sign-out" onClick={onLogout}>Sign out</span>
-            </nav>
+      <div className="dashboard-content">
+        <div className="page-title">
+          <h1>Dashboard</h1>
+          <div className="breadcrumb">
+            <span>Welcome, Teacher</span>
           </div>
-          <div className="header-right">
-            <div className="notification-icon">🔔</div>
-            <div className="user-profile">
-              <img src="/api/placeholder/32/32" alt="Profile" className="profile-img" />
-              <span className="user-name">Ms. GANGARANI</span>
+        </div>
+
+        <div className="stats-row">
+          <div className="stat-card green">
+            <div className="stat-number">164</div>
+            <div className="stat-label">TODAY VISITORS</div>
+          </div>
+          
+          <div className="stat-card yellow">
+            <div className="stat-number">6105</div>
+            <div className="stat-label">STUDENTS</div>
+          </div>
+          
+          <div className="stat-card red">
+            <div className="stat-number">23910410</div>
+            <div className="stat-label">TOTAL VISITORS</div>
+          </div>
+        </div>
+
+        <div className="content-row">
+          <div className="notifications-panel">
+            <h3>Establishment Section</h3>
+            <div className="notifications-list">
+              <div className="notification-item">
+                <span className="notification-icon">📄</span>
+                <span>New academic session setup required</span>
+              </div>
+              <div className="notification-item">
+                <span className="notification-icon">📄</span>
+                <span>Staff allocation pending</span>
+              </div>
+              <div className="notification-item">
+                <span className="notification-icon">📄</span>
+                <span>Student enrollment update needed</span>
+              </div>
             </div>
           </div>
-        </header>
-
-        {/* Dashboard Content */}
-        <div className="dashboard-content">
-          <div className="page-title">
-            <h1>{activeSection === 'dashboard' ? 'Dashboard' : sidebarItems.find(item => item.key === activeSection)?.label || 'Page'}</h1>
-            <div className="breadcrumb">
-              <span className="breadcrumb-link">Home</span> / <span>{activeSection === 'dashboard' ? 'Dashboard' : sidebarItems.find(item => item.key === activeSection)?.label || 'Page'}</span>
+          
+          <div className="right-panel">
+            <div className="mybox-section">
+              <h3>MyBox</h3>
+              <div className="mybox-content">
+                <div className="mybox-item">
+                  <span className="mybox-icon">📊</span>
+                  <span>Performance Reports</span>
+                </div>
+                <div className="mybox-item">
+                  <span className="mybox-icon">📝</span>
+                  <span>Pending Reviews</span>
+                </div>
+                <div className="mybox-item">
+                  <span className="mybox-icon">💼</span>
+                  <span>Administrative Tasks</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="todo-section">
+              <h3>ToDo List</h3>
+              <div className="todo-list">
+                <div className="todo-item">
+                  <input type="checkbox" />
+                  <span>Review student attendance reports</span>
+                </div>
+                <div className="todo-item">
+                  <input type="checkbox" />
+                  <span>Update exam schedules</span>
+                </div>
+                <div className="todo-item">
+                  <input type="checkbox" />
+                  <span>Approve leave applications</span>
+                </div>
+                <div className="todo-item">
+                  <input type="checkbox" />
+                  <span>Conduct staff meeting</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          {renderMainContent()}
         </div>
       </div>
     </div>
