@@ -13,14 +13,14 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="action-buttons">
-        <button className="action-btn library-btn">ACCESS LIBRARY PORTAL</button>
-        <button className="action-btn download-btn">DOWNLOAD & FORMS</button>
-        <button className="action-btn phone-btn">PHONE DIRECTORY</button>
-      </div>
-
       <div className="dashboard-content">
         <div className="main-content">
+          <div className="action-buttons">
+            <button className="action-btn library-btn">ACCESS LIBRARY PORTAL</button>
+            <button className="action-btn download-btn">DOWNLOAD & FORMS</button>
+            <button className="action-btn phone-btn">PHONE DIRECTORY</button>
+          </div>
+          
           <div className="todo-section">
             <div className="section-header">
               <i className="fas fa-clipboard-list"></i>
@@ -53,34 +53,34 @@ const Dashboard = () => {
             </div>
             <div className="notifications-list">
               <div className="notification-item">
-                <div className="notification-title">
+                <span className="notification-title">
                   Information to the Students on Placement |Broadridge | 21 Jun...
-                </div>
-                <div className="notification-date-badge wed">Wed, 19 Jun 2019</div>
+                </span>
+                <span className="notification-date-badge wed">Wed, 19 Jun 2019</span>
               </div>
               <div className="notification-item">
-                <div className="notification-title">
+                <span className="notification-title">
                   Information to the Students on Placement |MPHASIS | 14 & 15 A...
-                </div>
-                <div className="notification-date-badge thu">Thu, 13 Jun 2019</div>
+                </span>
+                <span className="notification-date-badge thu">Thu, 13 Jun 2019</span>
               </div>
               <div className="notification-item">
-                <div className="notification-title">
+                <span className="notification-title">
                   A Pre-Placement Summer Training Programme for III B. Tech | D...
-                </div>
-                <div className="notification-date-badge sun">Sun, 28 Apr 2019</div>
+                </span>
+                <span className="notification-date-badge sun">Sun, 28 Apr 2019</span>
               </div>
               <div className="notification-item">
-                <div className="notification-title">
+                <span className="notification-title">
                   Information to the Students on Placement | Infor | 27 April, 2019
-                </div>
-                <div className="notification-date-badge thu">Thu, 25 Apr 2019</div>
+                </span>
+                <span className="notification-date-badge thu">Thu, 25 Apr 2019</span>
               </div>
               <div className="notification-item">
-                <div className="notification-title">
+                <span className="notification-title">
                   Information to the Students on Placement | Multiplier Solutions |...
-                </div>
-                <div className="notification-date-badge sat">Sat, 13 Apr 2019</div>
+                </span>
+                <span className="notification-date-badge sat">Sat, 13 Apr 2019</span>
               </div>
             </div>
           </div>
