@@ -4,8 +4,9 @@ import './Sidebar.css';
 const Sidebar = ({ activeSection, onSectionChange }) => {
   const [expandedSections, setExpandedSections] = useState({
     academics: false,
+    'course-registration': false,
     requisitions: false,
-    printForms: false,
+    'print-forms': false,
     payments: false,
     uploads: false,
     feedback: false
@@ -52,7 +53,20 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       expanded: expandedSections.academics,
       children: [
         { id: 'course-content', label: 'Course Content Delivery' },
-        { id: 'course-registration', label: 'Course Registration' },
+        { 
+          id: 'course-registration', 
+          label: 'Course Registration',
+          type: 'expandable',
+          expanded: expandedSections['course-registration'],
+          children: [
+            { id: 'regular-courses', label: 'Regular Courses', type: 'single' },
+            { id: 're-registration', label: 'Re-Registration', type: 'single' },
+            { id: 'accelerated-courses', label: 'Accelerated Courses', type: 'single' },
+            { id: 'plar-courses', label: 'PLAR Courses', type: 'single' },
+            { id: 'plar-foreign-courses', label: 'PLAR Foreign Courses', type: 'single' },
+            { id: 'aicte-lite-program', label: 'AICTE LITE Program Reg', type: 'single' }
+          ]
+        },
         { id: 'attendance', label: 'Attendance' },
         { id: 'pat-attendance', label: 'PAT Attendance' },
         { id: 'project-selection', label: 'Project Selection & Allotment' },
@@ -78,7 +92,7 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Print Forms',
       icon: '🖨️',
       type: 'expandable',
-      expanded: expandedSections.printForms,
+      expanded: expandedSections['print-forms'],
       children: [
         { id: 'no-dues', label: 'No Dues' },
         { id: 'tc-form', label: 'TC Form' }
@@ -217,13 +231,44 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
             {item.type === 'expandable' && item.expanded && item.children && isHovered && (
               <div className="submenu">
                 {item.children.map((child) => (
-                  <div 
-                    key={child.id}
-                    className={`submenu-item ${activeSection === child.id ? 'active' : ''}`}
-                    onClick={() => onSectionChange(child.id)}
-                  >
-                    <span className="submenu-icon">✓</span>
-                    <span className="submenu-label">{child.label}</span>
+                  <div key={child.id} className="submenu-wrapper">
+                    <div 
+                      className={`submenu-item ${activeSection === child.id ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (child.type === 'expandable') {
+                          toggleSection(child.id);
+                        } else {
+                          onSectionChange(child.id);
+                        }
+                      }}
+                    >
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">{child.label}</span>
+                      {child.type === 'expandable' && (
+                        <span className={`expand-icon ${child.expanded ? 'expanded' : ''}`}>
+                          ▼
+                        </span>
+                      )}
+                    </div>
+                    
+                    {child.type === 'expandable' && child.expanded && child.children && (
+                      <div className="sub-submenu">
+                        {child.children.map((subChild) => (
+                          <div 
+                            key={subChild.id}
+                            className={`sub-submenu-item ${activeSection === subChild.id ? 'active' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSectionChange(subChild.id);
+                            }}
+                          >
+                            <span className="sub-submenu-icon">•</span>
+                            <span className="sub-submenu-label">{subChild.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

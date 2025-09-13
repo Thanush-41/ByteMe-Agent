@@ -2,6 +2,26 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
+import CourseContent from './pages/academics/CourseContent';
+import CourseRegistration from './pages/academics/CourseRegistration';
+import Attendance from './pages/academics/Attendance';
+import PATAttendance from './pages/academics/PATAttendance';
+import ProjectSelection from './pages/academics/ProjectSelection';
+import AATQuestions from './pages/academics/AATQuestions';
+import ProjectTeam from './pages/academics/ProjectTeam';
+import ProjectWork from './pages/academics/ProjectWork';
+import RegularCourses from './pages/academics/courseRegistration/RegularCourses';
+import ReRegistration from './pages/academics/courseRegistration/ReRegistration';
+import AcceleratedCourses from './pages/academics/courseRegistration/AcceleratedCourses';
+import PLARCourses from './pages/academics/courseRegistration/PLARCourses';
+import PLARForeignCourses from './pages/academics/courseRegistration/PLARForeignCourses';
+import AICTELiteProgram from './pages/academics/courseRegistration/AICTELiteProgram';
+import UploadCVC from './pages/uploads/UploadCVC';
+import AATTechTalk from './pages/uploads/AATTechTalk';
+import AATConceptVideo from './pages/uploads/AATConceptVideo';
+import AATII from './pages/uploads/AATII';
+import AATI from './pages/uploads/AATI';
+import LabRecord from './pages/uploads/LabRecord';
 import './styles/App.css';
 
 function App() {
@@ -20,21 +40,33 @@ function App() {
       case 'academics':
         return <div className="page-content">Academics page content</div>;
       case 'course-content':
-        return <div className="page-content">Course Content Delivery</div>;
+        return <CourseContent />;
       case 'course-registration':
-        return <div className="page-content">Course Registration</div>;
+        return <CourseRegistration />;
+      case 'regular-courses':
+        return <RegularCourses />;
+      case 're-registration':
+        return <ReRegistration />;
+      case 'accelerated-courses':
+        return <AcceleratedCourses />;
+      case 'plar-courses':
+        return <PLARCourses />;
+      case 'plar-foreign-courses':
+        return <PLARForeignCourses />;
+      case 'aicte-lite-program':
+        return <AICTELiteProgram />;
       case 'attendance':
-        return <div className="page-content">Attendance</div>;
+        return <Attendance />;
       case 'pat-attendance':
-        return <div className="page-content">PAT Attendance</div>;
+        return <PATAttendance />;
       case 'project-selection':
-        return <div className="page-content">Project Selection & Allotment</div>;
+        return <ProjectSelection />;
       case 'aat-questions':
-        return <div className="page-content">AAT Question Selection</div>;
+        return <AATQuestions />;
       case 'project-team':
-        return <div className="page-content">Project Team Member Selection</div>;
+        return <ProjectTeam />;
       case 'project-work':
-        return <div className="page-content">Project Work/Thesis Report</div>;
+        return <ProjectWork />;
       case 'certificate-request':
         return <div className="page-content">Certificate Request</div>;
       case 'transcript-duplicate':
@@ -54,17 +86,17 @@ function App() {
       case 'timetable':
         return <div className="page-content">Timetable</div>;
       case 'upload-cvc':
-        return <div className="page-content">Upload CVC Certificate</div>;
+        return <UploadCVC />;
       case 'aat-tech-talk':
-        return <div className="page-content">AAT (Tech Talk)</div>;
+        return <AATTechTalk />;
       case 'aat-concept-video':
-        return <div className="page-content">AAT (Concept Video)</div>;
+        return <AATConceptVideo />;
       case 'aat-ii':
-        return <div className="page-content">AAT-II</div>;
+        return <AATII />;
       case 'aat-i':
-        return <div className="page-content">AAT-I</div>;
+        return <AATI />;
       case 'lab-record':
-        return <div className="page-content">Lab Record</div>;
+        return <LabRecord />;
       case 'biometric':
         return <div className="page-content">Biometric</div>;
       case 'early-semester-feedback':

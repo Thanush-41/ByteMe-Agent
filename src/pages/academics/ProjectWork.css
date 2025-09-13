@@ -1,0 +1,594 @@
+/* Project Work Styles */
+.project-work {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.project-overview {
+  margin-bottom: 30px;
+}
+
+.project-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  padding: 25px;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.project-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.4em;
+}
+
+.project-id {
+  background: #667eea;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.project-details {
+  margin-bottom: 25px;
+}
+
+.project-details p {
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.project-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.meta-item span:first-child {
+  font-size: 0.9em;
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.meta-item span:last-child {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.status-badge {
+  background: #d4edda;
+  color: #155724;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.progress-section {
+  margin-top: 25px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-header span:first-child {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.progress-header span:last-child {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 1.1em;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #28a745 100%);
+  transition: width 0.3s ease;
+}
+
+.milestones-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  padding: 25px;
+}
+
+.section-header {
+  margin-bottom: 25px;
+}
+
+.section-header h2 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.3em;
+}
+
+.milestones-timeline {
+  position: relative;
+}
+
+.milestone-card {
+  display: flex;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.milestone-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.milestone-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9em;
+  z-index: 2;
+}
+
+.milestone-line {
+  width: 2px;
+  height: 50px;
+  background: #e9ecef;
+  margin-top: 10px;
+}
+
+.milestone-content {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 3px solid #e9ecef;
+}
+
+.milestone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.milestone-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1em;
+}
+
+.milestone-status {
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.milestone-content p {
+  color: #6c757d;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.milestone-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.date-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.date-item span:first-child {
+  font-size: 0.8em;
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.date-item span:last-child {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.marks {
+  color: #28a745;
+  font-size: 1.1em;
+}
+
+.milestone-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.feedback-btn,
+.submit-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.feedback-btn {
+  background: #17a2b8;
+  color: white;
+}
+
+.feedback-btn:hover {
+  background: #138496;
+}
+
+.submit-btn {
+  background: #28a745;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #218838;
+}
+
+.documents-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  padding: 25px;
+}
+
+.documents-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.upload-btn {
+  padding: 10px 20px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+  background: #5a6fd8;
+}
+
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.document-card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.document-card:hover {
+  background: #f8f9fa;
+  border-color: #667eea;
+}
+
+.document-icon {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.document-info h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 1em;
+}
+
+.document-info p {
+  margin: 0 0 5px 0;
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.document-actions {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.download-btn {
+  padding: 8px 15px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+  background: #218838;
+}
+
+.feedback-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  padding: 25px;
+}
+
+.feedback-section h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+}
+
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.feedback-request {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+}
+
+.request-info h4 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+}
+
+.request-info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.request-status .status {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.upload-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #dc3545;
+}
+
+.upload-form {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.form-group select,
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.file-preview {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.file-preview p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.upload-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.upload-btn {
+  background: #667eea;
+  color: white;
+}
+
+.upload-btn:hover {
+  background: #5a6fd8;
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #5a6268;
+}
+
+.project-guidelines {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.project-guidelines h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.project-guidelines ul {
+  color: #6c757d;
+  padding-left: 20px;
+}
+
+.project-guidelines li {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .project-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .project-meta {
+    grid-template-columns: 1fr;
+  }
+  
+  .milestone-card {
+    flex-direction: column;
+  }
+  
+  .milestone-indicator {
+    flex-direction: row;
+    margin-bottom: 15px;
+    margin-right: 0;
+  }
+  
+  .milestone-line {
+    width: 50px;
+    height: 2px;
+    margin-top: 0;
+    margin-left: 10px;
+  }
+  
+  .documents-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .milestone-dates {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+}

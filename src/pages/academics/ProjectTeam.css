@@ -1,0 +1,496 @@
+/* Project Team Styles */
+.project-team {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.team-overview {
+  margin-bottom: 30px;
+}
+
+.team-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  border-left: 4px solid #667eea;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.current-team {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.current-team h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+}
+
+.team-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.member-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.member-card:hover {
+  background: #f8f9fa;
+  border-color: #667eea;
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.member-avatar {
+  width: 50px;
+  height: 50px;
+  background: #667eea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  color: white;
+}
+
+.member-details h4 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.1em;
+}
+
+.member-details p {
+  margin: 0 0 3px 0;
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.member-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.skill-tag {
+  background: #e7f3ff;
+  color: #0066cc;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.7em;
+  font-weight: 500;
+}
+
+.member-role {
+  margin: 0 15px;
+}
+
+.member-role select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 0.9em;
+  color: #2c3e50;
+}
+
+.member-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.remove-btn {
+  padding: 8px 15px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.3s ease;
+}
+
+.remove-btn:hover {
+  background: #c82333;
+}
+
+.remove-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.pending-invitations {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.pending-invitations h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+}
+
+.invitations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.invitation-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+}
+
+.invitation-info h4 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+}
+
+.invitation-info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.invitation-status .status {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.add-members {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.add-members h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+}
+
+.search-section {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.available-students {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.student-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.student-card:hover {
+  background: #f8f9fa;
+  border-color: #667eea;
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.student-avatar {
+  width: 45px;
+  height: 45px;
+  background: #28a745;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  color: white;
+}
+
+.student-details h4 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+}
+
+.student-details p {
+  margin: 0 0 3px 0;
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.student-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.student-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.invite-btn {
+  padding: 8px 15px;
+  background: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.3s ease;
+}
+
+.invite-btn:hover {
+  background: #138496;
+}
+
+.invitation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #dc3545;
+}
+
+.student-summary {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.student-summary h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.student-summary p {
+  margin: 0 0 5px 0;
+  color: #6c757d;
+}
+
+.invitation-form {
+  margin-bottom: 20px;
+}
+
+.invitation-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.invitation-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.send-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.send-btn {
+  background: #28a745;
+  color: white;
+}
+
+.send-btn:hover {
+  background: #218838;
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #5a6268;
+}
+
+.team-guidelines {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.team-guidelines h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.team-guidelines ul {
+  color: #6c757d;
+  padding-left: 20px;
+}
+
+.team-guidelines li {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .team-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .member-card,
+  .student-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .member-info,
+  .student-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .member-actions,
+  .student-actions {
+    justify-content: center;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+}
