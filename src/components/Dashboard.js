@@ -1,92 +1,96 @@
-import React from 'react';
+﻿import React from 'react';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const placementNotifications = [
-    {
-      id: 1,
-      title: "Information to the Students on Placement | Broadridge | 21 Jun...",
-      date: "Wed, 19 Jun 2019",
-      type: "placement"
-    },
-    {
-      id: 2,
-      title: "Information to the Students on Placement | MPHASIS | 14 & 15 A...",
-      date: "Thu, 13 Jun 2019",
-      type: "placement"
-    },
-    {
-      id: 3,
-      title: "A Pre-Placement Summer Training Programme for III B. Tech | D...",
-      date: "Sun, 28 Apr 2019",
-      type: "training"
-    },
-    {
-      id: 4,
-      title: "Information to the Students on Placement | Infor | 27 April, 2019",
-      date: "Thu, 25 Apr 2019",
-      type: "placement"
-    },
-    {
-      id: 5,
-      title: "Information to the Students on Placement | Multiplier Solutions |...",
-      date: "Sat, 13 Apr 2019",
-      type: "placement"
-    }
-  ];
-
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <div className="action-buttons">
-          <button className="action-btn portal-btn">ACCESS LIBRARY PORTAL</button>
-          <button className="action-btn download-btn">DOWNLOAD & FORMS</button>
+        <h1>Dashboard</h1>
+        <div className="breadcrumb">
+          <span className="breadcrumb-home">Home</span>
+          <span className="breadcrumb-separator">/</span>
+          <span className="breadcrumb-current">Dashboard</span>
         </div>
+      </div>
+
+      <div className="action-buttons">
+        <button className="action-btn library-btn">ACCESS LIBRARY PORTAL</button>
+        <button className="action-btn download-btn">DOWNLOAD & FORMS</button>
+        <button className="action-btn phone-btn">PHONE DIRECTORY</button>
       </div>
 
       <div className="dashboard-content">
         <div className="main-content">
-          <div className="content-area">
-            <div className="todo-section">
-              <h3>📋 To Do List</h3>
-              <div className="todo-items">
-                <div className="todo-item">
-                  <span className="todo-text">Lab File Upload</span>
-                </div>
-                <div className="todo-item">
-                  <span className="todo-text">AAT EVALUATION</span>
-                </div>
+          <div className="todo-section">
+            <div className="section-header">
+              <i className="fas fa-clipboard-list"></i>
+              <span>To Do List</span>
+            </div>
+            <div className="todo-items">
+              <div className="todo-item">
+                <span>Lab File Upload</span>
+              </div>
+              <div className="todo-item">
+                <span>AAT EVALUATION</span>
               </div>
             </div>
-            
-            <div className="regulations-section">
-              <h3>Examination Notifications (Autonomous)</h3>
-              <div className="regulations-content">
-                <p>Academic regulations and examination guidelines will be displayed here.</p>
-              </div>
+          </div>
+
+          <div className="exam-notifications-section">
+            <div className="section-header">
+              <span>Examination Notifications (Autonomous)</span>
+            </div>
+            <div className="notification-content">
+              {/* This section appears empty in the screenshot */}
             </div>
           </div>
         </div>
 
         <div className="sidebar-content">
-          <div className="notifications-section">
-            <h3>PLACEMENT NOTIFICATIONS</h3>
+          <div className="placement-notifications-section">
+            <div className="section-header">
+              <span>PLACEMENT NOTIFICATIONS</span>
+            </div>
             <div className="notifications-list">
-              {placementNotifications.map((notification) => (
-                <div key={notification.id} className="notification-item">
-                  <div className="notification-content">
-                    <p className="notification-title">{notification.title}</p>
-                    <span className="notification-date">{notification.date}</span>
-                  </div>
+              <div className="notification-item">
+                <div className="notification-title">
+                  Information to the Students on Placement |Broadridge | 21 Jun...
                 </div>
-              ))}
+                <div className="notification-date-badge wed">Wed, 19 Jun 2019</div>
+              </div>
+              <div className="notification-item">
+                <div className="notification-title">
+                  Information to the Students on Placement |MPHASIS | 14 & 15 A...
+                </div>
+                <div className="notification-date-badge thu">Thu, 13 Jun 2019</div>
+              </div>
+              <div className="notification-item">
+                <div className="notification-title">
+                  A Pre-Placement Summer Training Programme for III B. Tech | D...
+                </div>
+                <div className="notification-date-badge sun">Sun, 28 Apr 2019</div>
+              </div>
+              <div className="notification-item">
+                <div className="notification-title">
+                  Information to the Students on Placement | Infor | 27 April, 2019
+                </div>
+                <div className="notification-date-badge thu">Thu, 25 Apr 2019</div>
+              </div>
+              <div className="notification-item">
+                <div className="notification-title">
+                  Information to the Students on Placement | Multiplier Solutions |...
+                </div>
+                <div className="notification-date-badge sat">Sat, 13 Apr 2019</div>
+              </div>
             </div>
           </div>
 
-          <div className="examination-section">
-            <h3>JNTUH Examination Circulars</h3>
-            <div className="examination-content">
-              <p>Examination circulars and updates will be displayed here.</p>
+          <div className="jntuh-section">
+            <div className="section-header">
+              <span>JNTUH Examination Circulars</span>
+            </div>
+            <div className="jntuh-content">
+              {/* This section appears empty in the screenshot */}
             </div>
           </div>
         </div>

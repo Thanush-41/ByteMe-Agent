@@ -36,6 +36,21 @@ import Revaluation from './pages/examinations/Revaluation';
 import RemedialExamRegistration from './pages/examinations/RemedialExamRegistration';
 import ConfettiNightRegistration from './pages/examinations/ConfettiNightRegistration';
 import InternshipProgramRegistration from './pages/examinations/InternshipProgramRegistration';
+// Requisitions pages
+import CertificateRequest from './pages/requisitions/CertificateRequest';
+import TranscriptDuplicate from './pages/requisitions/TranscriptDuplicate';
+import SkillProgram from './pages/requisitions/SkillProgram';
+// Payments pages
+import OnlineFeesPayment from './pages/payments/OnlineFeesPayment';
+// Feedback pages
+import EarlySemesterFeedback from './pages/feedback/EarlySemesterFeedback';
+// Other pages
+import AccessionRegister from './pages/AccessionRegister';
+import Biometric from './pages/Biometric';
+import BonafideCertificate from './pages/BonafideCertificate';
+// Print Forms pages
+import NoDues from './pages/print-forms/NoDues';
+import TCForm from './pages/print-forms/TCForm';
 import './styles/App.css';
 
 function App() {
@@ -106,17 +121,17 @@ function App() {
       case 'project-work':
         return <ProjectWork />;
       case 'certificate-request':
-        return <div className="page-content">Certificate Request</div>;
+        return <CertificateRequest />;
       case 'transcript-duplicate':
-        return <div className="page-content">Transcript / Duplicate / Name Change</div>;
+        return <TranscriptDuplicate />;
       case 'skill-program':
-        return <div className="page-content">Skill Program</div>;
+        return <SkillProgram />;
       case 'no-dues':
-        return <div className="page-content">No Dues</div>;
+        return <NoDues />;
       case 'tc-form':
-        return <div className="page-content">TC Form</div>;
+        return <TCForm />;
       case 'online-fees-payment':
-        return <div className="page-content">Online Fees Payment</div>;
+        return <OnlineFeesPayment />;
       case 'online-fees-ccav':
         return <div className="page-content">Online Fees Payment CCAV</div>;
       case 'fee-status':
@@ -136,9 +151,9 @@ function App() {
       case 'lab-record':
         return <LabRecord />;
       case 'biometric':
-        return <div className="page-content">Biometric</div>;
+        return <Biometric />;
       case 'early-semester-feedback':
-        return <div className="page-content">Early Semester Feedback</div>;
+        return <EarlySemesterFeedback />;
       case 'obe-feedback':
         return <div className="page-content">OBE Feedback</div>;
       case 'design-review-syllabus':
@@ -150,7 +165,7 @@ function App() {
       case 'naac-survey':
         return <div className="page-content">NAAC SURVEY</div>;
       case 'bonafide':
-        return <div className="page-content">Bonafide Certificate</div>;
+        return <BonafideCertificate />;
       case 'my-box':
         return <div className="page-content">My Box</div>;
       case 'upload-birth':
@@ -159,32 +174,14 @@ function App() {
         return <div className="page-content">Update Academic Bank of Credits</div>;
       case 'requisitions':
         return <div className="page-content">Requisitions</div>;
-      case 'certificate-request':
-        return <div className="page-content">Certificate Request</div>;
-      case 'transcript-duplicate':
-        return <div className="page-content">Transcript / Duplicate / Name Change</div>;
-      case 'skill-program':
-        return <div className="page-content">Skill Program</div>;
       case 'print-forms':
         return <div className="page-content">Print Forms</div>;
-      case 'no-dues':
-        return <div className="page-content">No Dues</div>;
-      case 'tc-form':
-        return <div className="page-content">TC Form</div>;
       case 'accession-register':
-        return <div className="page-content">Accession Register</div>;
+        return <AccessionRegister />;
       case 'payments':
         return <div className="page-content">Payments</div>;
-      case 'online-fees-payment':
-        return <div className="page-content">Online Fees Payment</div>;
       case 'online-fees-payment-ccav':
         return <div className="page-content">Online Fees Payment CCAV</div>;
-      case 'fee-status':
-        return <div className="page-content">Fee Status</div>;
-      case 'timetable':
-        return <Timetable />;
-      case 'bonafide':
-        return <div className="page-content">Bonafide Certificate</div>;
       default:
         return <div className="page-content">Page not found</div>;
     }

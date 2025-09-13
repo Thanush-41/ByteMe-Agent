@@ -2,138 +2,263 @@ import React, { useState } from 'react';
 import './CourseContent.css';
 
 const CourseContent = () => {
-  const [courses] = useState([
+  const [academicYear] = useState('2025-26');
+  
+  const [courseContentData] = useState([
+    // ACS008 - Data Structures
     {
-      id: 1,
-      code: 'CSE101',
-      name: 'Data Structures and Algorithms',
-      instructor: 'Dr. Smith',
-      materials: [
-        { id: 1, type: 'PDF', name: 'Chapter 1 - Introduction.pdf', size: '2.5 MB' },
-        { id: 2, type: 'PPT', name: 'Arrays and Linked Lists.pptx', size: '5.1 MB' },
-        { id: 3, type: 'VIDEO', name: 'Sorting Algorithms Demo.mp4', size: '45.2 MB' },
-        { id: 4, type: 'PDF', name: 'Practice Problems.pdf', size: '1.8 MB' }
-      ]
+      sNo: 1,
+      date: '23 Aug, 2025',
+      period: '2',
+      topicsCovered: 'RECURSIVE ALGORITHM, PERFORMANCE ANALYSIS',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
     },
     {
-      id: 2,
-      code: 'CSE201',
-      name: 'Database Management Systems',
-      instructor: 'Prof. Johnson',
-      materials: [
-        { id: 5, type: 'PDF', name: 'SQL Basics.pdf', size: '3.2 MB' },
-        { id: 6, type: 'PPT', name: 'Normalization.pptx', size: '4.8 MB' },
-        { id: 7, type: 'VIDEO', name: 'Database Design.mp4', size: '52.1 MB' }
-      ]
+      sNo: 2,
+      date: '21 Aug, 2025',
+      period: '2',
+      topicsCovered: 'SORTING TECHNIQUES: MERGE SORT AND RADIX SORT',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
     },
     {
-      id: 3,
-      code: 'CSE301',
-      name: 'Software Engineering',
-      instructor: 'Dr. Williams',
-      materials: [
-        { id: 8, type: 'PDF', name: 'SDLC Models.pdf', size: '2.1 MB' },
-        { id: 9, type: 'PPT', name: 'Agile Methodology.pptx', size: '6.3 MB' }
-      ]
+      sNo: 3,
+      date: '19 Aug, 2025',
+      period: '2',
+      topicsCovered: 'CLASSIFICATION OF DATA STRUCTURES',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 4,
+      date: '18 Aug, 2025',
+      period: '2',
+      topicsCovered: 'SORTING TECHNIQUES: BUBBLE SORT, SELECTION SORT',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 5,
+      date: '14 Aug, 2025',
+      period: '2',
+      topicsCovered: 'SORTING TECHNIQUES: BUBBLE SORT, SELECTION SORT',
+      status: 'ABSENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 6,
+      date: '12 Aug, 2025',
+      period: '2',
+      topicsCovered: 'QUEUES: PRIMITIVE OPERATIONS; IMPLEMENTATION OF QUEUES USING ARRAY',
+      status: 'ABSENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 7,
+      date: '11 Aug, 2025',
+      period: '2',
+      topicsCovered: 'SEARCHING TECHNIQUES: UNIFORM BINARY SEARCH AND INTERPOLATION SEARCH',
+      status: 'ABSENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 8,
+      date: '09 Aug, 2025',
+      period: '1',
+      topicsCovered: 'SEARCHING TECHNIQUES: FIBONACCI SEARCH AND COMPARISON',
+      status: 'ABSENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 9,
+      date: '07 Aug, 2025',
+      period: '2',
+      topicsCovered: 'SEARCHING TECHNIQUES: LINEAR SEARCH, BINARY SEARCH',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PDF',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 10,
+      date: '06 Aug, 2025',
+      period: '3',
+      topicsCovered: 'RECURSIVE ALGORITHM, PERFORMANCE ANALYSIS',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 11,
+      date: '05 Aug, 2025',
+      period: '2',
+      topicsCovered: 'OPERATIONS ON DATA STRUCTURES',
+      status: 'ABSENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    {
+      sNo: 12,
+      date: '04 Aug, 2025',
+      period: '3',
+      topicsCovered: 'INTRODUCTION OF DATA STRUCTURES',
+      status: 'ABSENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS008',
+      subjectName: 'Data Structures'
+    },
+    // ACS009 - Operating Systems
+    {
+      sNo: 1,
+      date: '12 Sep, 2025',
+      period: '6',
+      topicsCovered: 'PETERSON\'S SOLUTION',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS009',
+      subjectName: 'Operating Systems'
+    },
+    {
+      sNo: 2,
+      date: '09 Sep, 2025',
+      period: '3',
+      topicsCovered: 'PROCESS SYNCHRONIZATION, THE CRITICAL SECTION PROBLEM',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS009',
+      subjectName: 'Operating Systems'
+    },
+    {
+      sNo: 3,
+      date: '09 Sep, 2025',
+      period: '2',
+      topicsCovered: 'REALTIME SCHEDULING, THREAD SCHEDULING',
+      status: 'PRESENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS009',
+      subjectName: 'Operating Systems'
+    },
+    {
+      sNo: 4,
+      date: '08 Sep, 2025',
+      period: '1',
+      topicsCovered: 'MULTIPLEPROCESSOR SCHEDULING',
+      status: 'ABSENT',
+      youtubeLink: 'NIL',
+      powerpointLecture: 'PPT',
+      subject: 'ACS009',
+      subjectName: 'Operating Systems'
     }
   ]);
 
-  const [selectedCourse, setSelectedCourse] = useState(null);
-
-  const getFileIcon = (type) => {
-    switch(type) {
-      case 'PDF': return '📄';
-      case 'PPT': return '📊';
-      case 'VIDEO': return '🎥';
-      default: return '📎';
+  const groupedData = courseContentData.reduce((acc, item) => {
+    const key = `${item.subject} - ${item.subjectName}`;
+    if (!acc[key]) {
+      acc[key] = [];
     }
-  };
-
-  const handleDownload = (material) => {
-    // Simulate download
-    alert(`Downloading: ${material.name}`);
-  };
-
-  const handleView = (material) => {
-    // Simulate view
-    alert(`Opening: ${material.name}`);
-  };
+    acc[key].push(item);
+    return acc;
+  }, {});
 
   return (
-    <div className="course-content">
+    <div className="course-content-page">
       <div className="page-header">
-        <h1>📚 Course Content Delivery</h1>
-        <p>Access course materials, lecture notes, and resources</p>
-      </div>
-
-      <div className="courses-grid">
-        {courses.map(course => (
-          <div key={course.id} className="course-card">
-            <div className="course-header">
-              <h3>{course.code}</h3>
-              <h4>{course.name}</h4>
-              <p className="instructor">👨‍🏫 {course.instructor}</p>
-            </div>
-            
-            <div className="course-stats">
-              <span className="material-count">
-                📁 {course.materials.length} Materials
-              </span>
-            </div>
-
-            <button 
-              className="view-materials-btn"
-              onClick={() => setSelectedCourse(course)}
-            >
-              View Materials
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {selectedCourse && (
-        <div className="materials-modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>{selectedCourse.code} - {selectedCourse.name}</h2>
-              <button 
-                className="close-btn"
-                onClick={() => setSelectedCourse(null)}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="materials-list">
-              {selectedCourse.materials.map(material => (
-                <div key={material.id} className="material-item">
-                  <div className="material-info">
-                    <span className="file-icon">{getFileIcon(material.type)}</span>
-                    <div className="file-details">
-                      <span className="file-name">{material.name}</span>
-                      <span className="file-size">{material.size}</span>
-                    </div>
-                  </div>
-                  <div className="material-actions">
-                    <button 
-                      className="action-btn view-btn"
-                      onClick={() => handleView(material)}
-                    >
-                      👁️ View
-                    </button>
-                    <button 
-                      className="action-btn download-btn"
-                      onClick={() => handleDownload(material)}
-                    >
-                      ⬇️ Download
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <h1>Course Content Delivery</h1>
+        <div className="breadcrumb">
+          <span>Home</span> / <span>Course Content Delivery</span>
         </div>
-      )}
+      </div>
+
+      <div className="content-container">
+        <div className="academic-year-info">
+          <strong>Academic Year: {academicYear}</strong>
+        </div>
+
+        <div className="course-content-table">
+          <table>
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Date</th>
+                <th>Period</th>
+                <th>Topics Covered</th>
+                <th>Status</th>
+                <th>Youtube Link</th>
+                <th>Powerpoint Lecture</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(groupedData).map(([subjectKey, sessions]) => (
+                <React.Fragment key={subjectKey}>
+                  <tr className="subject-header">
+                    <td colSpan="7">
+                      {subjectKey}
+                    </td>
+                  </tr>
+                  {sessions.map((session, index) => (
+                    <tr key={`${session.subject}-${session.sNo}`}>
+                      <td>{session.sNo}</td>
+                      <td>{session.date}</td>
+                      <td>{session.period}</td>
+                      <td className="topics-cell">{session.topicsCovered}</td>
+                      <td>
+                        <span className={`status ${session.status.toLowerCase()}`}>
+                          {session.status}
+                        </span>
+                      </td>
+                      <td>{session.youtubeLink}</td>
+                      <td>
+                        {session.powerpointLecture !== 'NIL' && (
+                          <button 
+                            className={`download-btn ${session.powerpointLecture.toLowerCase()}`}
+                            onClick={() => alert(`Downloading ${session.powerpointLecture} for ${session.topicsCovered}`)}
+                          >
+                            {session.powerpointLecture}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
