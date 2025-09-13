@@ -5,6 +5,7 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
   const [expandedSections, setExpandedSections] = useState({
     academics: false,
     'course-registration': false,
+    examinations: false,
     requisitions: false,
     'print-forms': false,
     payments: false,
@@ -31,7 +32,22 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       id: 'examinations',
       label: 'Examinations',
       icon: '📝',
-      type: 'single'
+      type: 'expandable',
+      expanded: expandedSections.examinations,
+      children: [
+        { id: 'cia-marks', label: 'CIA Marks' },
+        { id: 'admit-card', label: 'Admit Card' },
+        { id: 'exam-registration', label: 'Exam Registration' },
+        { id: 'makeup-exam-registration', label: 'Makeup Exam Registration' },
+        { id: 'exam-result', label: 'Exam Result' },
+        { id: 'credit-register', label: 'Credit Register' },
+        { id: 'booklets', label: 'Booklets' },
+        { id: 'question-paper-solution', label: 'Question Paper and Solution' },
+        { id: 'revaluation', label: 'Revaluation' },
+        { id: 'remedial-exam-registration', label: 'Remedial Exam Registration' },
+        { id: 'confetti-night-registration', label: 'Confetti Night Registration' },
+        { id: 'internship-program-registration', label: 'Internship Program Registration' }
+      ]
     },
     {
       id: 'confetti-night',

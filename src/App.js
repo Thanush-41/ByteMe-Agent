@@ -23,6 +23,19 @@ import AATConceptVideo from './pages/uploads/AATConceptVideo';
 import AATII from './pages/uploads/AATII';
 import AATI from './pages/uploads/AATI';
 import LabRecord from './pages/uploads/LabRecord';
+// Examination pages
+import CIAMarks from './pages/examinations/CIAMarks';
+import AdmitCard from './pages/examinations/AdmitCard';
+import ExamRegistration from './pages/examinations/ExamRegistration';
+import MakeupExamRegistration from './pages/examinations/MakeupExamRegistration';
+import ExamResult from './pages/examinations/ExamResult';
+import CreditRegister from './pages/examinations/CreditRegister';
+import Booklets from './pages/examinations/Booklets';
+import QuestionPaperSolution from './pages/examinations/QuestionPaperSolution';
+import Revaluation from './pages/examinations/Revaluation';
+import RemedialExamRegistration from './pages/examinations/RemedialExamRegistration';
+import ConfettiNightRegistration from './pages/examinations/ConfettiNightRegistration';
+import InternshipProgramRegistration from './pages/examinations/InternshipProgramRegistration';
 import './styles/App.css';
 
 function App() {
@@ -37,7 +50,31 @@ function App() {
       case 'dashboard':
         return <Dashboard />;
       case 'examinations':
-        return <div className="page-content">Examinations page content</div>;
+        return <div className="page-content">Examinations</div>;
+      case 'cia-marks':
+        return <CIAMarks />;
+      case 'admit-card':
+        return <AdmitCard />;
+      case 'exam-registration':
+        return <ExamRegistration />;
+      case 'makeup-exam-registration':
+        return <MakeupExamRegistration />;
+      case 'exam-result':
+        return <ExamResult />;
+      case 'credit-register':
+        return <CreditRegister />;
+      case 'booklets':
+        return <Booklets />;
+      case 'question-paper-solution':
+        return <QuestionPaperSolution />;
+      case 'revaluation':
+        return <Revaluation />;
+      case 'remedial-exam-registration':
+        return <RemedialExamRegistration />;
+      case 'confetti-night-registration':
+        return <ConfettiNightRegistration />;
+      case 'internship-program-registration':
+        return <InternshipProgramRegistration />;
       case 'academics':
         return <div className="page-content">Academics page content</div>;
       case 'course-content':
