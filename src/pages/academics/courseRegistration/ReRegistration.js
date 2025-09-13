@@ -3,8 +3,8 @@ import './ReRegistration.css';
 
 const ReRegistration = () => {
   const [studentInfo] = useState({
-    rollNo: '24951A05CD',
-    name: 'CHAKILAM SRINATH',
+    rollNo: '22BCE7508',
+    name: 'Thanush',
     semester: '3',
     regulation: 'R23',
     academicYear: '2025-26',

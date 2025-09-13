@@ -21,7 +21,7 @@ const Header = ({ currentSection }) => {
         <div className="user-profile">
           <div className="user-avatar">👤</div>
           <div className="user-info">
-            <span className="user-name">CHAKILAM SRINATH</span>
+            <span className="user-name">Thanush</span>
           </div>
         </div>
         

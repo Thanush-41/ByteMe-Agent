@@ -3,8 +3,8 @@ import './InternshipProgramRegistration.css';
 
 const InternshipProgramRegistration = () => {
   const [formData, setFormData] = useState({
-    studentId: '24951A05CD',
-    name: 'CHAKILAM SRINATH',
+    studentId: '22BCE7508',
+    name: 'Thanush',
     branch: 'Computer Science Engineering',
     semester: '5',
     cgpa: '',

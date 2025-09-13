@@ -37,8 +37,8 @@ const OnlineFeesPayment = () => {
   ]);
 
   const [studentInfo] = useState({
-    rollNo: '24951A05CD',
-    name: 'CHAKILAM SRINATH',
+    rollNo: '22BCE7508',
+    name: 'Thanush',
     course: 'B.Tech Computer Science',
     year: '3rd Year',
     academicYear: '2025-26'

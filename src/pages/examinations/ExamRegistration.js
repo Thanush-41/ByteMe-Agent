@@ -3,8 +3,8 @@ import './ExamRegistration.css';
 
 const ExamRegistration = () => {
   const [studentInfo] = useState({
-    rollno: '24951A05CD',
-    name: 'CHAKILAM SRINATH',
+    rollno: '22BCE7508',
+    name: 'Thanush',
     semester: '3',
     regulation: 'R23',
     academicYear: '2025-26'
