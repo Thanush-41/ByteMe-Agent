@@ -1,7 +1,15 @@
 ﻿import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTE_ACTIONS } from '../constants/routeConstants';
 import './Dashboard.css';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleNavigate = (action) => {
+    navigate(`/?action=${action}`);
+  };
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -16,9 +24,24 @@ const Dashboard = () => {
       <div className="dashboard-content">
         <div className="main-content">
           <div className="action-buttons">
-            <button className="action-btn library-btn">ACCESS LIBRARY PORTAL</button>
-            <button className="action-btn download-btn">DOWNLOAD & FORMS</button>
-            <button className="action-btn phone-btn">PHONE DIRECTORY</button>
+            <button 
+              className="action-btn library-btn"
+              onClick={() => handleNavigate(ROUTE_ACTIONS.ACCESSION_REGISTER)}
+            >
+              ACCESS LIBRARY PORTAL
+            </button>
+            <button 
+              className="action-btn download-btn"
+              onClick={() => handleNavigate(ROUTE_ACTIONS.PRINT_FORMS)}
+            >
+              DOWNLOAD & FORMS
+            </button>
+            <button 
+              className="action-btn phone-btn"
+              onClick={() => handleNavigate(ROUTE_ACTIONS.BONAFIDE)}
+            >
+              PHONE DIRECTORY
+            </button>
           </div>
           
           <div className="todo-section">

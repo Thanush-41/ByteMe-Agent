@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, useLocation, useNavigate } from 'react-router-dom';
+import { ROUTE_ACTIONS, getCurrentAction } from './constants/routeConstants';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -53,134 +55,142 @@ import NoDues from './pages/print-forms/NoDues';
 import TCForm from './pages/print-forms/TCForm';
 import './styles/App.css';
 
-function App() {
-  const [activeSection, setActiveSection] = useState('dashboard');
+function AppContent() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Get the action from URL query parameters using the helper function
+  const action = getCurrentAction(location);
 
   const handleSectionChange = (section) => {
-    setActiveSection(section);
+    if (section === ROUTE_ACTIONS.DASHBOARD) {
+      navigate('/');
+    } else {
+      navigate(`/?action=${section}`);
+    }
   };
 
   const renderContent = () => {
-    switch (activeSection) {
-      case 'dashboard':
+    switch (action) {
+      case ROUTE_ACTIONS.DASHBOARD:
         return <Dashboard />;
-      case 'examinations':
+      case ROUTE_ACTIONS.EXAMINATIONS:
         return <div className="page-content">Examinations</div>;
-      case 'cia-marks':
+      case ROUTE_ACTIONS.CIA_MARKS:
         return <CIAMarks />;
-      case 'admit-card':
+      case ROUTE_ACTIONS.ADMIT_CARD:
         return <AdmitCard />;
-      case 'exam-registration':
+      case ROUTE_ACTIONS.EXAM_REGISTRATION:
         return <ExamRegistration />;
-      case 'makeup-exam-registration':
+      case ROUTE_ACTIONS.MAKEUP_EXAM_REGISTRATION:
         return <MakeupExamRegistration />;
-      case 'exam-result':
+      case ROUTE_ACTIONS.EXAM_RESULT:
         return <ExamResult />;
-      case 'credit-register':
+      case ROUTE_ACTIONS.CREDIT_REGISTER:
         return <CreditRegister />;
-      case 'booklets':
+      case ROUTE_ACTIONS.BOOKLETS:
         return <Booklets />;
-      case 'question-paper-solution':
+      case ROUTE_ACTIONS.QUESTION_PAPER_SOLUTION:
         return <QuestionPaperSolution />;
-      case 'revaluation':
+      case ROUTE_ACTIONS.REVALUATION:
         return <Revaluation />;
-      case 'remedial-exam-registration':
+      case ROUTE_ACTIONS.REMEDIAL_EXAM_REGISTRATION:
         return <RemedialExamRegistration />;
-      case 'confetti-night-registration':
+      case ROUTE_ACTIONS.CONFETTI_NIGHT_REGISTRATION:
         return <ConfettiNightRegistration />;
-      case 'internship-program-registration':
+      case ROUTE_ACTIONS.INTERNSHIP_PROGRAM_REGISTRATION:
         return <InternshipProgramRegistration />;
-      case 'academics':
+      case ROUTE_ACTIONS.ACADEMICS:
         return <div className="page-content">Academics page content</div>;
-      case 'course-content':
+      case ROUTE_ACTIONS.COURSE_CONTENT:
         return <CourseContent />;
-      case 'course-registration':
+      case ROUTE_ACTIONS.COURSE_REGISTRATION:
         return <CourseRegistration />;
-      case 'regular-courses':
+      case ROUTE_ACTIONS.REGULAR_COURSES:
         return <RegularCourses />;
-      case 're-registration':
+      case ROUTE_ACTIONS.RE_REGISTRATION:
         return <ReRegistration />;
-      case 'accelerated-courses':
+      case ROUTE_ACTIONS.ACCELERATED_COURSES:
         return <AcceleratedCourses />;
-      case 'plar-courses':
+      case ROUTE_ACTIONS.PLAR_COURSES:
         return <PLARCourses />;
-      case 'plar-foreign-courses':
+      case ROUTE_ACTIONS.PLAR_FOREIGN_COURSES:
         return <PLARForeignCourses />;
-      case 'aicte-lite-program':
+      case ROUTE_ACTIONS.AICTE_LITE_PROGRAM:
         return <AICTELiteProgram />;
-      case 'attendance':
+      case ROUTE_ACTIONS.ATTENDANCE:
         return <Attendance />;
-      case 'pat-attendance':
+      case ROUTE_ACTIONS.PAT_ATTENDANCE:
         return <PATAttendance />;
-      case 'project-selection':
+      case ROUTE_ACTIONS.PROJECT_SELECTION:
         return <ProjectSelection />;
-      case 'aat-questions':
+      case ROUTE_ACTIONS.AAT_QUESTIONS:
         return <AATQuestions />;
-      case 'project-team':
+      case ROUTE_ACTIONS.PROJECT_TEAM:
         return <ProjectTeam />;
-      case 'project-work':
+      case ROUTE_ACTIONS.PROJECT_WORK:
         return <ProjectWork />;
-      case 'certificate-request':
+      case ROUTE_ACTIONS.CERTIFICATE_REQUEST:
         return <CertificateRequest />;
-      case 'transcript-duplicate':
+      case ROUTE_ACTIONS.TRANSCRIPT_DUPLICATE:
         return <TranscriptDuplicate />;
-      case 'skill-program':
+      case ROUTE_ACTIONS.SKILL_PROGRAM:
         return <SkillProgram />;
-      case 'no-dues':
+      case ROUTE_ACTIONS.NO_DUES:
         return <NoDues />;
-      case 'tc-form':
+      case ROUTE_ACTIONS.TC_FORM:
         return <TCForm />;
-      case 'online-fees-payment':
+      case ROUTE_ACTIONS.ONLINE_FEES_PAYMENT:
         return <OnlineFeesPayment />;
-      case 'online-fees-ccav':
+      case ROUTE_ACTIONS.ONLINE_FEES_CCAV:
         return <div className="page-content">Online Fees Payment CCAV</div>;
-      case 'fee-status':
+      case ROUTE_ACTIONS.FEE_STATUS:
         return <div className="page-content">Fee Status</div>;
-      case 'timetable':
+      case ROUTE_ACTIONS.TIMETABLE:
         return <Timetable />;
-      case 'upload-cvc':
+      case ROUTE_ACTIONS.UPLOAD_CVC:
         return <UploadCVC />;
-      case 'aat-tech-talk':
+      case ROUTE_ACTIONS.AAT_TECH_TALK:
         return <AATTechTalk />;
-      case 'aat-concept-video':
+      case ROUTE_ACTIONS.AAT_CONCEPT_VIDEO:
         return <AATConceptVideo />;
-      case 'aat-ii':
+      case ROUTE_ACTIONS.AAT_II:
         return <AATII />;
-      case 'aat-i':
+      case ROUTE_ACTIONS.AAT_I:
         return <AATI />;
-      case 'lab-record':
+      case ROUTE_ACTIONS.LAB_RECORD:
         return <LabRecord />;
-      case 'biometric':
+      case ROUTE_ACTIONS.BIOMETRIC:
         return <Biometric />;
-      case 'early-semester-feedback':
+      case ROUTE_ACTIONS.EARLY_SEMESTER_FEEDBACK:
         return <EarlySemesterFeedback />;
-      case 'obe-feedback':
+      case ROUTE_ACTIONS.OBE_FEEDBACK:
         return <div className="page-content">OBE Feedback</div>;
-      case 'design-review-syllabus':
+      case ROUTE_ACTIONS.DESIGN_REVIEW_SYLLABUS:
         return <div className="page-content">Design and Review of Syllabus</div>;
-      case 'satisfaction-survey':
+      case ROUTE_ACTIONS.SATISFACTION_SURVEY:
         return <div className="page-content">Satisfaction Survey</div>;
-      case 'placement-experience':
+      case ROUTE_ACTIONS.PLACEMENT_EXPERIENCE:
         return <div className="page-content">Placement Experience</div>;
-      case 'naac-survey':
+      case ROUTE_ACTIONS.NAAC_SURVEY:
         return <div className="page-content">NAAC SURVEY</div>;
-      case 'bonafide':
+      case ROUTE_ACTIONS.BONAFIDE:
         return <BonafideCertificate />;
-      case 'my-box':
+      case ROUTE_ACTIONS.MY_BOX:
         return <div className="page-content">My Box</div>;
-      case 'upload-birth':
+      case ROUTE_ACTIONS.UPLOAD_BIRTH:
         return <div className="page-content">Upload Birth Certificate</div>;
-      case 'update-academic-bank':
+      case ROUTE_ACTIONS.UPDATE_ACADEMIC_BANK:
         return <div className="page-content">Update Academic Bank of Credits</div>;
-      case 'requisitions':
+      case ROUTE_ACTIONS.REQUISITIONS:
         return <div className="page-content">Requisitions</div>;
-      case 'print-forms':
+      case ROUTE_ACTIONS.PRINT_FORMS:
         return <div className="page-content">Print Forms</div>;
-      case 'accession-register':
+      case ROUTE_ACTIONS.ACCESSION_REGISTER:
         return <AccessionRegister />;
-      case 'payments':
+      case ROUTE_ACTIONS.PAYMENTS:
         return <div className="page-content">Payments</div>;
-      case 'online-fees-payment-ccav':
+      case ROUTE_ACTIONS.ONLINE_FEES_PAYMENT_CCAV:
         return <div className="page-content">Online Fees Payment CCAV</div>;
       default:
         return <div className="page-content">Page not found</div>;
@@ -190,16 +200,24 @@ function App() {
   return (
     <div className="app">
       <Sidebar 
-        activeSection={activeSection} 
+        activeSection={action} 
         onSectionChange={handleSectionChange}
       />
       <div className="main-content">
-        <Header currentSection={activeSection} />
+        <Header currentSection={action} />
         <div className="content-area">
           {renderContent()}
         </div>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 
