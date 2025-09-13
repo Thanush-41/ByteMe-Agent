@@ -16,6 +16,7 @@ import AcceleratedCourses from './pages/academics/courseRegistration/Accelerated
 import PLARCourses from './pages/academics/courseRegistration/PLARCourses';
 import PLARForeignCourses from './pages/academics/courseRegistration/PLARForeignCourses';
 import AICTELiteProgram from './pages/academics/courseRegistration/AICTELiteProgram';
+import Timetable from './pages/Timetable';
 import UploadCVC from './pages/uploads/UploadCVC';
 import AATTechTalk from './pages/uploads/AATTechTalk';
 import AATConceptVideo from './pages/uploads/AATConceptVideo';
@@ -84,7 +85,7 @@ function App() {
       case 'fee-status':
         return <div className="page-content">Fee Status</div>;
       case 'timetable':
-        return <div className="page-content">Timetable</div>;
+        return <Timetable />;
       case 'upload-cvc':
         return <UploadCVC />;
       case 'aat-tech-talk':
@@ -144,7 +145,7 @@ function App() {
       case 'fee-status':
         return <div className="page-content">Fee Status</div>;
       case 'timetable':
-        return <div className="page-content">Timetable</div>;
+        return <Timetable />;
       case 'bonafide':
         return <div className="page-content">Bonafide Certificate</div>;
       default:
