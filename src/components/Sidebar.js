@@ -6,7 +6,9 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
     academics: false,
     requisitions: false,
     printForms: false,
-    payments: false
+    payments: false,
+    uploads: false,
+    feedback: false
   });
 
   const toggleSection = (section) => {
@@ -64,7 +66,11 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       icon: '📋',
       type: 'expandable',
       expanded: expandedSections.requisitions,
-      children: []
+      children: [
+        { id: 'certificate-request', label: 'Certificate Request' },
+        { id: 'transcript-duplicate', label: 'Transcript / Duplicate / Name Change' },
+        { id: 'skill-program', label: 'Skill Program' }
+      ]
     },
     {
       id: 'print-forms',
@@ -72,7 +78,10 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       icon: '🖨️',
       type: 'expandable',
       expanded: expandedSections.printForms,
-      children: []
+      children: [
+        { id: 'no-dues', label: 'No Dues' },
+        { id: 'tc-form', label: 'TC Form' }
+      ]
     },
     {
       id: 'accession-register',
@@ -86,13 +95,53 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       icon: '💳',
       type: 'expandable',
       expanded: expandedSections.payments,
-      children: []
+      children: [
+        { id: 'online-fees-payment', label: 'Online Fees Payment' },
+        { id: 'online-fees-payment-ccav', label: 'Online Fees Payment CCAV' },
+        { id: 'fee-status', label: 'Fee Status' }
+      ]
     },
     {
       id: 'timetable',
       label: 'Timetable',
       icon: '⏰',
       type: 'single'
+    },
+    {
+      id: 'uploads',
+      label: 'Uploads',
+      icon: '📤',
+      type: 'expandable',
+      expanded: expandedSections.uploads,
+      children: [
+        { id: 'upload-cvc', label: 'Upload CVC Certificate' },
+        { id: 'aat-tech-talk', label: 'AAT (Tech Talk)' },
+        { id: 'aat-concept-video', label: 'AAT (Concept Video)' },
+        { id: 'aat-ii', label: 'AAT-II' },
+        { id: 'aat-i', label: 'AAT-I' },
+        { id: 'lab-record', label: 'Lab Record' }
+      ]
+    },
+    {
+      id: 'biometric',
+      label: 'Biometric',
+      icon: '👆',
+      type: 'single'
+    },
+    {
+      id: 'feedback',
+      label: 'Feedback',
+      icon: '💬',
+      type: 'expandable',
+      expanded: expandedSections.feedback,
+      children: [
+        { id: 'early-semester-feedback', label: 'Early Semester Feedback' },
+        { id: 'obe-feedback', label: 'OBE Feedback' },
+        { id: 'design-review-syllabus', label: 'Design and Review of Syllabus' },
+        { id: 'satisfaction-survey', label: 'Satisfaction Survey' },
+        { id: 'placement-experience', label: 'Placement Experience' },
+        { id: 'naac-survey', label: 'NAAC SURVEY' }
+      ]
     },
     {
       id: 'bonafide',
