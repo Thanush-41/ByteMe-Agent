@@ -1,32 +1,75 @@
 .sidebar {
-  width: 260px;
-  background-color: #2c3e50;
+  width: 60px;
+  background-color: #6c757d;
   color: white;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2000;
+  min-width: 60px;
+}
+
+.sidebar-expanded {
+  width: 260px;
+  min-width: 260px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
+
+.sidebar-collapsed {
+  width: 60px;
+  min-width: 60px;
 }
 
 .sidebar-header {
   padding: 20px;
-  border-bottom: 1px solid #34495e;
-  background-color: #34495e;
+  border-bottom: 1px solid #5a6268;
+  background-color: #5a6268;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: center;
+}
+
+.sidebar-expanded .logo {
+  justify-content: flex-start;
 }
 
 .logo-icon {
   font-size: 24px;
+  flex-shrink: 0;
 }
 
 .logo-text {
   font-size: 20px;
   font-weight: bold;
   color: #3498db;
+  white-space: nowrap;
+}
+
+.search-container {
+  margin-top: 15px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #5a6268;
+  color: white;
+  font-size: 14px;
+}
+
+.search-input::placeholder {
+  color: #bdc3c7;
 }
 
 .sidebar-menu {
@@ -45,10 +88,21 @@
   cursor: pointer;
   transition: all 0.3s ease;
   gap: 12px;
+  justify-content: flex-start;
+}
+
+.sidebar-collapsed .menu-link {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar-expanded .menu-link {
+  justify-content: flex-start;
+  padding: 12px 20px;
 }
 
 .menu-link:hover {
-  background-color: #34495e;
+  background-color: #5a6268;
   color: white;
 }
 
@@ -61,16 +115,20 @@
   font-size: 16px;
   width: 20px;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .menu-label {
   flex: 1;
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .expand-icon {
   font-size: 12px;
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .expand-icon.expanded {
@@ -78,7 +136,7 @@
 }
 
 .submenu {
-  background-color: #1a252f;
+  background-color: #5a6268;
   border-left: 3px solid #3498db;
 }
 
@@ -94,7 +152,7 @@
 }
 
 .submenu-item:hover {
-  background-color: #34495e;
+  background-color: #5a6268;
   color: white;
 }
 

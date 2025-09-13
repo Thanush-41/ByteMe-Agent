@@ -39,20 +39,30 @@ const Dashboard = () => {
     <div className="dashboard">
       <div className="dashboard-header">
         <div className="action-buttons">
-          <button className="action-btn portal-btn">STUDENT PORTAL</button>
+          <button className="action-btn portal-btn">ACCESS LIBRARY PORTAL</button>
           <button className="action-btn download-btn">DOWNLOAD & FORMS</button>
-          <button className="action-btn directory-btn">PHONE DIRECTORY</button>
         </div>
       </div>
 
       <div className="dashboard-content">
         <div className="main-content">
           <div className="content-area">
+            <div className="todo-section">
+              <h3>📋 To Do List</h3>
+              <div className="todo-items">
+                <div className="todo-item">
+                  <span className="todo-text">Lab File Upload</span>
+                </div>
+                <div className="todo-item">
+                  <span className="todo-text">AAT EVALUATION</span>
+                </div>
+              </div>
+            </div>
+            
             <div className="regulations-section">
-              <h3>Regulations (Autonomous)</h3>
+              <h3>Examination Notifications (Autonomous)</h3>
               <div className="regulations-content">
-                {/* This would contain regulation information */}
-                <p>Academic regulations and guidelines will be displayed here.</p>
+                <p>Academic regulations and examination guidelines will be displayed here.</p>
               </div>
             </div>
           </div>

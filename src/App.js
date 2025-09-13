@@ -85,6 +85,8 @@ function App() {
         return <div className="page-content">My Box</div>;
       case 'upload-birth':
         return <div className="page-content">Upload Birth Certificate</div>;
+      case 'update-academic-bank':
+        return <div className="page-content">Update Academic Bank of Credits</div>;
       case 'requisitions':
         return <div className="page-content">Requisitions</div>;
       case 'certificate-request':

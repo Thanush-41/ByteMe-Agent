@@ -10,6 +10,7 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
     uploads: false,
     feedback: false
   });
+  const [isHovered, setIsHovered] = useState(false);
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -160,16 +161,35 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Upload Birth Certificate',
       icon: '📄',
       type: 'single'
+    },
+    {
+      id: 'update-academic-bank',
+      label: 'Update Academic Bank of Credits',
+      icon: '📝',
+      type: 'single'
     }
   ];
 
   return (
-    <div className="sidebar">
+    <div 
+      className={`sidebar ${isHovered ? 'sidebar-expanded' : 'sidebar-collapsed'}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="sidebar-header">
         <div className="logo">
           <span className="logo-icon">🏛️</span>
-          <span className="logo-text">IARE</span>
+          {isHovered && <span className="logo-text">IARE</span>}
         </div>
+        {isHovered && (
+          <div className="search-container">
+            <input 
+              type="text" 
+              placeholder="Search for menu.." 
+              className="search-input"
+            />
+          </div>
+        )}
       </div>
       
       <div className="sidebar-menu">
@@ -186,15 +206,15 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
               }}
             >
               <span className="menu-icon">{item.icon}</span>
-              <span className="menu-label">{item.label}</span>
-              {item.type === 'expandable' && (
+              {isHovered && <span className="menu-label">{item.label}</span>}
+              {item.type === 'expandable' && isHovered && (
                 <span className={`expand-icon ${item.expanded ? 'expanded' : ''}`}>
                   ▼
                 </span>
               )}
             </div>
             
-            {item.type === 'expandable' && item.expanded && item.children && (
+            {item.type === 'expandable' && item.expanded && item.children && isHovered && (
               <div className="submenu">
                 {item.children.map((child) => (
                   <div 

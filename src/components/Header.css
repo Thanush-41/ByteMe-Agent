@@ -7,6 +7,8 @@
   border-bottom: 1px solid #dee2e6;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   z-index: 1000;
+  width: 100%;
+  min-width: 0;
 }
 
 .header-left .breadcrumb {
@@ -40,6 +42,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+ 
 }
 
 .notification-icon {
@@ -47,6 +50,7 @@
   font-size: 20px;
   cursor: pointer;
   color: #6c757d;
+
 }
 
 .notification-badge {
@@ -62,12 +66,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
 
 .user-profile {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-right: -2rem;
 }
 
 .user-avatar {
@@ -79,17 +85,20 @@
   align-items: center;
   justify-content: center;
   font-size: 16px;
+
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
+
 }
 
 .user-name {
   font-size: 14px;
   font-weight: 500;
   color: #495057;
+
 }
 
 .sign-out-btn {
@@ -101,6 +110,7 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s ease;
+
 }
 
 .sign-out-btn:hover {

@@ -2,12 +2,16 @@
   padding: 0;
   background-color: #f8f9fa;
   min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  margin-left: -2rem;
 }
 
 .dashboard-header {
   padding: 20px;
   background-color: white;
   border-bottom: 1px solid #dee2e6;
+  width: 100%;
 }
 
 .action-buttons {
@@ -57,15 +61,21 @@
   gap: 20px;
   padding: 20px;
   min-height: calc(100vh - 140px);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .main-content {
   flex: 2;
+  min-width: 0;
+  width: 100%;
 }
 
 .sidebar-content {
   flex: 1;
   min-width: 300px;
+  max-width: 400px;
 }
 
 .content-area {
@@ -80,6 +90,44 @@
   color: #495057;
   margin-bottom: 15px;
   font-size: 18px;
+}
+
+.todo-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.todo-section h3 {
+  color: #495057;
+  margin-bottom: 15px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.todo-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-item {
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-left: 4px solid #007bff;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.todo-item:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
 }
 
 .regulations-content {
