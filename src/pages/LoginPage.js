@@ -38,6 +38,11 @@ const LoginPage = () => {
       <div className="login-header">
         <img src="/logo.png" alt="Samvidha Logo" className="login-logo" />
         <h2>Faculty / Student Login</h2>
+        <div className="demo-credentials">
+          <span>Demo Credentials:</span>
+          <div>username: student</div>
+          <div>password: student</div>
+        </div>
       </div>
       <form className="login-form" onSubmit={handleSubmit}>
         <input

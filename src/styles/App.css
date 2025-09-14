@@ -55,31 +55,57 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Responsive Design */
+/* Enhanced Responsive Design */
+@media (max-width: 1024px) {
+  .main-content.sidebar-expanded {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+}
+
 @media (max-width: 768px) {
   .app {
-    flex-direction: column;
+    flex-direction: row; /* Keep normal layout */
   }
   
-  .sidebar {
+  .main-content,
+  .main-content.sidebar-expanded,
+  .main-content.sidebar-collapsed {
+    margin-left: 0;
     width: 100%;
-    height: auto;
-    order: 2;
+    height: 100vh;
   }
   
-  .main-content {
-    order: 1;
+  .content-area {
+    height: 100vh;
+    padding-top: 60px; /* Space for mobile menu button */
+  }
+  
+  .page-content {
+    margin: 15px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-area {
+    padding-top: 50px;
   }
   
   .page-content {
     margin: 10px;
     padding: 15px;
+    border-radius: 6px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 360px) {
+  .content-area {
+    padding-top: 45px;
+  }
+  
   .page-content {
-    margin: 5px;
-    padding: 10px;
+    margin: 8px;
+    padding: 12px;
   }
 }

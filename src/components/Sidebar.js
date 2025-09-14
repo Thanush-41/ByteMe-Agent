@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ activeSection, onSectionChange, onHoverChange }) => {
@@ -13,6 +13,24 @@ const Sidebar = ({ activeSection, onSectionChange, onHoverChange }) => {
     feedback: false
   });
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -228,104 +246,159 @@ const Sidebar = ({ activeSection, onSectionChange, onHoverChange }) => {
   ];
 
   return (
-    <div 
-      className={`sidebar ${isHovered ? 'sidebar-expanded' : 'sidebar-collapsed'}`}
-      onMouseEnter={() => {
-        setIsHovered(true);
-        onHoverChange?.(true);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        onHoverChange?.(false);
-      }}
-    >
-      <div className="sidebar-header">
-        <div className="logo">
-          <span className="logo-icon">🏛️</span>
-          {isHovered && <span className="logo-text">IARE Portal</span>}
-        </div>
-        {isHovered && (
-          <div className="search-container">
-            <input 
-              type="text" 
-              placeholder="Search menu..." 
-              className="search-input"
-            />
+    <>
+      {/* Mobile Menu Toggle Button */}
+      {isMobile && (
+        <button 
+          className="mobile-menu-toggle"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle navigation menu"
+        >
+          <span className="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+      )}
+
+      {/* Mobile Overlay */}
+      {isMobile && isMobileMenuOpen && (
+        <div 
+          className="mobile-overlay"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      <div 
+        className={`sidebar ${
+          isMobile 
+            ? `sidebar-mobile ${isMobileMenuOpen ? 'sidebar-mobile-open' : ''}` 
+            : isHovered ? 'sidebar-expanded' : 'sidebar-collapsed'
+        }`}
+        onMouseEnter={() => {
+          if (!isMobile) {
+            setIsHovered(true);
+            onHoverChange?.(true);
+          }
+        }}
+        onMouseLeave={() => {
+          if (!isMobile) {
+            setIsHovered(false);
+            onHoverChange?.(false);
+          }
+        }}
+      >
+        <div className="sidebar-header">
+          <div className="logo">
+            <span className="logo-icon">🏛️</span>
+            {(isHovered || isMobileMenuOpen) && <span className="logo-text">IARE Portal</span>}
           </div>
-        )}
-      </div>
-      
-      <div className="sidebar-menu">
-        {menuItems.map((item) => (
-          <div key={item.id} className="menu-item">
-            <div 
-              className={`menu-link ${activeSection === item.id ? 'active' : ''}`}
-              onClick={() => {
-                if (item.type === 'expandable') {
-                  toggleSection(item.id);
-                } else {
-                  onSectionChange(item.id);
-                }
-              }}
-            >
-              <span className="menu-icon">{item.icon}</span>
-              {isHovered && <span className="menu-label">{item.label}</span>}
-              {item.type === 'expandable' && isHovered && (
-                <span className={`expand-icon ${expandedSections[item.id] ? 'expanded' : ''}`}>
-                  ▼
-                </span>
-              )}
+          {(isHovered || isMobileMenuOpen) && !isMobile && (
+            <div className="search-container">
+              <input 
+                type="text" 
+                placeholder="Search menu..." 
+                className="search-input"
+              />
             </div>
-            
-            {item.type === 'expandable' && expandedSections[item.id] && item.children && isHovered && (
-              <div className="submenu">
-                {item.children.map((child) => (
-                  <div key={child.id} className="submenu-wrapper">
-                    <div 
-                      className={`submenu-item ${activeSection === child.id ? 'active' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (child.type === 'expandable') {
-                          toggleSection(child.id);
-                        } else {
-                          onSectionChange(child.id);
-                        }
-                      }}
-                    >
-                      <span className="submenu-icon">•</span>
-                      <span className="submenu-label">{child.label}</span>
-                      {child.type === 'expandable' && (
-                        <span className={`expand-icon ${expandedSections[child.id] ? 'expanded' : ''}`}>
-                          ▼
-                        </span>
+          )}
+          {/* Close button for mobile */}
+          {isMobile && isMobileMenuOpen && (
+            <button 
+              className="mobile-close-btn"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        
+        <div className="sidebar-menu">
+          {menuItems.map((item) => (
+            <div key={item.id} className="menu-item">
+              <div 
+                className={`menu-link ${activeSection === item.id ? 'active' : ''}`}
+                onClick={() => {
+                  if (item.type === 'expandable') {
+                    toggleSection(item.id);
+                  } else {
+                    onSectionChange(item.id);
+                    // Close mobile menu when item is selected
+                    if (isMobile) {
+                      setIsMobileMenuOpen(false);
+                    }
+                  }
+                }}
+              >
+                <span className="menu-icon">{item.icon}</span>
+                {(isHovered || isMobileMenuOpen) && <span className="menu-label">{item.label}</span>}
+                {item.type === 'expandable' && (isHovered || isMobileMenuOpen) && (
+                  <span className={`expand-icon ${expandedSections[item.id] ? 'expanded' : ''}`}>
+                    ▼
+                  </span>
+                )}
+              </div>
+              
+              {item.type === 'expandable' && expandedSections[item.id] && item.children && (isHovered || isMobileMenuOpen) && (
+                <div className="submenu">
+                  {item.children.map((child) => (
+                    <div key={child.id} className="submenu-wrapper">
+                      <div 
+                        className={`submenu-item ${activeSection === child.id ? 'active' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (child.type === 'expandable') {
+                            toggleSection(child.id);
+                          } else {
+                            onSectionChange(child.id);
+                            // Close mobile menu when item is selected
+                            if (isMobile) {
+                              setIsMobileMenuOpen(false);
+                            }
+                          }
+                        }}
+                      >
+                        <span className="submenu-icon">•</span>
+                        <span className="submenu-label">{child.label}</span>
+                        {child.type === 'expandable' && (
+                          <span className={`expand-icon ${expandedSections[child.id] ? 'expanded' : ''}`}>
+                            ▼
+                          </span>
+                        )}
+                      </div>
+                      
+                      {child.type === 'expandable' && expandedSections[child.id] && child.children && (
+                        <div className="sub-submenu">
+                          {child.children.map((subChild) => (
+                            <div 
+                              key={subChild.id}
+                              className={`sub-submenu-item ${activeSection === subChild.id ? 'active' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSectionChange(subChild.id);
+                                // Close mobile menu when item is selected
+                                if (isMobile) {
+                                  setIsMobileMenuOpen(false);
+                                }
+                              }}
+                            >
+                              <span className="sub-submenu-icon">→</span>
+                              <span className="sub-submenu-label">{subChild.label}</span>
+                            </div>
+                          ))}
+                        </div>
                       )}
                     </div>
-                    
-                    {child.type === 'expandable' && expandedSections[child.id] && child.children && (
-                      <div className="sub-submenu">
-                        {child.children.map((subChild) => (
-                          <div 
-                            key={subChild.id}
-                            className={`sub-submenu-item ${activeSection === subChild.id ? 'active' : ''}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onSectionChange(subChild.id);
-                            }}
-                          >
-                            <span className="sub-submenu-icon">→</span>
-                            <span className="sub-submenu-label">{subChild.label}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
