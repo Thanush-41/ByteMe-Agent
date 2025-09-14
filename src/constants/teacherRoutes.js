@@ -113,7 +113,11 @@ export const TEACHER_ROUTES = {
 // Helper function to get current teacher route from URL
 export const getCurrentTeacherRoute = (location) => {
   const searchParams = new URLSearchParams(location.search);
-  return searchParams.get('section') || TEACHER_ROUTES.DASHBOARD;
+  // Check if it's teacher portal and get the section
+  if (searchParams.get('teacher') === 'true') {
+    return searchParams.get('section') || 'dashboard';
+  }
+  return 'dashboard';
 };
 
 // Helper function to navigate to teacher route

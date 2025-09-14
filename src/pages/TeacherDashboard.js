@@ -1,17 +1,56 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { findRouteByKey } from '../constants/teacherRoutes';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getCurrentTeacherRoute } from '../constants/teacherRoutes';
 import './TeacherDashboard.css';
+
+// Import teacher pages
+import NominalRolls from './academics/NominalRolls';
+import ActivityDiaryUG from './academics/ActivityDiaryUG';
+import DateWiseActivity from './academics/DateWiseActivity';
+import SectionTimetable from './academics/SectionTimetable';
+import Subjects from './academics/Subjects';
+import StaffTimetable from './academics/StaffTimetable';
+import ActivityDiaryAccelerated from './academics/ActivityDiaryAccelerated';
+import PastPendingActivityDiary from './academics/PastPendingActivityDiary';
+import ActivityDiaryPAT from './academics/ActivityDiaryPAT';
+import ActivityDiaryRemedial from './academics/ActivityDiaryRemedial';
+import ActivityReport from './academics/ActivityReport';
+import ICTStudioSlotBooking from './academics/ICTStudioSlotBooking';
+import AATRegistration from './academics/AATRegistration';
+import AttendanceRegister from './academics/AttendanceRegister';
+import ProjectApproval from './academics/ProjectApproval';
+import ProjectTitles from './academics/ProjectTitles';
+import ScheduleOfInstructions from './academics/ScheduleOfInstructions';
+import LORRequest from './academics/LORRequest';
+import AttendingActivityEvents from './academics/AttendingActivityEvents';
+import LibraryBooksIssued from './academics/LibraryBooksIssued';
+
+import AAT from './evaluations/AAT';
+import AATII from './evaluations/AATII';
+import Labs from './evaluations/Labs';
+
+import Payroll from './administrative/Payroll';
+import TDS from './administrative/TDS';
+import Reports from './administrative/Reports';
+import Leave from './administrative/Leave';
+
+import FacultyUploads from './uploads/FacultyUploads';
+import ServiceRegister from './service/ServiceRegister';
 
 const TeacherDashboard = ({ onLogout }) => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [expandedDropdowns, setExpandedDropdowns] = useState({});
+  const location = useLocation();
   const navigate = useNavigate();
-
+  
+  // Get current route from URL - this will make URLs work like /?section=nominal-rolls
+  const currentPage = getCurrentTeacherRoute(location);
+  
   const handleNavigation = (routeKey) => {
-    const route = findRouteByKey(routeKey);
-    if (route) {
-      navigate(route.path);
+    if (routeKey === 'dashboard') {
+      navigate('/?teacher=true');
+    } else {
+      navigate(`/?teacher=true&section=${routeKey}`);
     }
   };
 
@@ -20,6 +59,140 @@ const TeacherDashboard = ({ onLogout }) => {
       ...prev,
       [dropdownKey]: !prev[dropdownKey]
     }));
+  };
+
+  const renderContent = () => {
+    switch (currentPage) {
+      case 'dashboard':
+        return (
+          <div className="dashboard-content">
+            {/* Stats Cards Row */}
+            <div className="stats-container">
+              <div className="metric-card green">
+                <div className="metric-number">255</div>
+                <div className="metric-label">TODAY VISITORS</div>
+                <div className="metric-footer">More info →</div>
+              </div>
+              
+              <div className="metric-card yellow">
+                <div className="metric-number">6105</div>
+                <div className="metric-label">STUDENTS</div>
+                <div className="metric-footer">More info →</div>
+              </div>
+              
+              <div className="metric-card red">
+                <div className="metric-number">23910501</div>
+                <div className="metric-label">TOTAL VISITORS</div>
+                <div className="metric-footer">More info →</div>
+              </div>
+            </div>
+
+            {/* Notifications and MyBox Section */}
+            <div className="content-sections">
+              <div className="notifications-section">
+                <h3>🔔 Notifications</h3>
+                <div className="notification-item">
+                  <p>New course content uploaded for Advanced Algorithms</p>
+                  <small>2 hours ago</small>
+                </div>
+                <div className="notification-item">
+                  <p>Assignment submissions due tomorrow</p>
+                  <small>1 day ago</small>
+                </div>
+                <div className="notification-item">
+                  <p>Faculty meeting scheduled for Friday</p>
+                  <small>3 days ago</small>
+                </div>
+              </div>
+              
+              <div className="mybox-section">
+                <h3>📦 My Box</h3>
+                <div className="mybox-item">
+                  <p>Grade submissions for Semester 1</p>
+                  <small>Pending review</small>
+                </div>
+                <div className="mybox-item">
+                  <p>Research paper submission</p>
+                  <small>Draft saved</small>
+                </div>
+                <div className="mybox-item">
+                  <p>Conference registration</p>
+                  <small>Completed</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      // Academic pages
+      case 'nominal-rolls':
+        return <NominalRolls />;
+      case 'activity-diary-ug':
+        return <ActivityDiaryUG />;
+      case 'date-wise-activity':
+        return <DateWiseActivity />;
+      case 'section-timetable':
+        return <SectionTimetable />;
+      case 'subjects':
+        return <Subjects />;
+      case 'staff-timetable':
+        return <StaffTimetable />;
+      case 'activity-diary-accelerated':
+        return <ActivityDiaryAccelerated />;
+      case 'past-pending-activity-diary':
+        return <PastPendingActivityDiary />;
+      case 'activity-diary-pat':
+        return <ActivityDiaryPAT />;
+      case 'activity-diary-remedial':
+        return <ActivityDiaryRemedial />;
+      case 'activity-report':
+        return <ActivityReport />;
+      case 'ict-studio-slot-booking':
+        return <ICTStudioSlotBooking />;
+      case 'aat-registration':
+        return <AATRegistration />;
+      case 'attendance-register':
+        return <AttendanceRegister />;
+      case 'project-approval':
+        return <ProjectApproval />;
+      case 'project-titles':
+        return <ProjectTitles />;
+      case 'schedule-of-instructions':
+        return <ScheduleOfInstructions />;
+      case 'lor-request':
+        return <LORRequest />;
+      case 'attending-activity-events':
+        return <AttendingActivityEvents />;
+      case 'library-books-issued':
+        return <LibraryBooksIssued />;
+
+      // Evaluation pages
+      case 'aat':
+        return <AAT />;
+      case 'aat-ii':
+        return <AATII />;
+      case 'labs':
+        return <Labs />;
+
+      // Administrative pages
+      case 'payroll':
+        return <Payroll />;
+      case 'tds':
+        return <TDS />;
+      case 'reports':
+        return <Reports />;
+      case 'leave':
+        return <Leave />;
+
+      // Upload and Service pages
+      case 'faculty-uploads':
+        return <FacultyUploads />;
+      case 'service-register':
+        return <ServiceRegister />;
+
+      default:
+        return <div className="page-content">Page not found: {currentPage}</div>;
+    }
   };
 
   return (
@@ -141,33 +314,85 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns.academics && isSidebarExpanded && (
                   <div className="dropdown-menu">
-                    <div className="dropdown-item" onClick={() => handleNavigation('course-content')}>
+                    <div className="dropdown-item" onClick={() => handleNavigation('nominal-rolls')}>
                       <span className="submenu-icon">✓</span>
-                      <span className="submenu-label">Course Content</span>
+                      <span className="submenu-label">Nominal Rolls</span>
                     </div>
-                    <div className="dropdown-item" onClick={() => handleNavigation('aat-questions')}>
+                    <div className="dropdown-item" onClick={() => handleNavigation('activity-diary-ug')}>
                       <span className="submenu-icon">✓</span>
-                      <span className="submenu-label">AAT Questions</span>
+                      <span className="submenu-label">Activity Diary UG</span>
                     </div>
-                    <div className="dropdown-item" onClick={() => handleNavigation('pat-attendance')}>
+                    <div className="dropdown-item" onClick={() => handleNavigation('date-wise-activity')}>
                       <span className="submenu-icon">✓</span>
-                      <span className="submenu-label">PAT Attendance</span>
+                      <span className="submenu-label">Date Wise Activity</span>
                     </div>
-                    <div className="dropdown-item" onClick={() => handleNavigation('attendance')}>
+                    <div className="dropdown-item" onClick={() => handleNavigation('section-timetable')}>
                       <span className="submenu-icon">✓</span>
-                      <span className="submenu-label">Attendance</span>
+                      <span className="submenu-label">Section Timetable</span>
                     </div>
-                    <div className="dropdown-item" onClick={() => handleNavigation('project-selection')}>
+                    <div className="dropdown-item" onClick={() => handleNavigation('subjects')}>
                       <span className="submenu-icon">✓</span>
-                      <span className="submenu-label">Project Selection</span>
+                      <span className="submenu-label">Subjects</span>
                     </div>
-                    <div className="dropdown-item" onClick={() => handleNavigation('project-team')}>
+                    <div className="dropdown-item" onClick={() => handleNavigation('staff-timetable')}>
                       <span className="submenu-icon">✓</span>
-                      <span className="submenu-label">Project Team</span>
+                      <span className="submenu-label">Staff Timetable</span>
                     </div>
-                    <div className="dropdown-item" onClick={() => handleNavigation('project-work')}>
+                    <div className="dropdown-item" onClick={() => handleNavigation('activity-diary-accelerated')}>
                       <span className="submenu-icon">✓</span>
-                      <span className="submenu-label">Project Work</span>
+                      <span className="submenu-label">Activity Diary Accelerated</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('past-pending-activity-diary')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Past/Pending Activity Diary</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('activity-diary-pat')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Activity Diary PAT</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('activity-diary-remedial')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Activity Diary Remedial</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('activity-report')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Activity Report</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('ict-studio-slot-booking')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">ICT Studio Slot Booking</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('aat-registration')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">AAT Registration</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('attendance-register')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Attendance Register</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('project-approval')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Project Approval</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('project-titles')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Project Titles</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('schedule-of-instructions')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Schedule of Instructions</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('lor-request')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">LOR Request</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('attending-activity-events')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Attending Activity Events</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('library-books-issued')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Library Books Issued</span>
                     </div>
                   </div>
                 )}
@@ -187,6 +412,10 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns.labs && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('labs')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Labs</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('see-lab-marks')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">SEE Lab Marks</span>
@@ -241,6 +470,14 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns.evaluations && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('aat')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">AAT</span>
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNavigation('aat-ii')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">AAT-II</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('exam-registration')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">Exam Registration</span>
@@ -275,6 +512,10 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns.payroll && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('payroll')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Payroll</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('salary-slip')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">Salary Slip</span>
@@ -309,6 +550,10 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns.tds && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('tds')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">TDS</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('tds-certificate')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">TDS Certificate</span>
@@ -339,6 +584,10 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns.reports && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('reports')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Reports</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('student-reports')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">Student Reports</span>
@@ -399,6 +648,10 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns.leave && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('leave')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Leave</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('apply-leave')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">Apply Leave</span>
@@ -433,6 +686,10 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns['faculty-uploads'] && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('faculty-uploads')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Faculty Uploads</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('assignment-uploads')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">Assignment Uploads</span>
@@ -468,6 +725,10 @@ const TeacherDashboard = ({ onLogout }) => {
                 </div>
                 {expandedDropdowns['service-register'] && isSidebarExpanded && (
                   <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => handleNavigation('service-register')}>
+                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-label">Service Register</span>
+                    </div>
                     <div className="dropdown-item" onClick={() => handleNavigation('service-history')}>
                       <span className="submenu-icon">✓</span>
                       <span className="submenu-label">Service History</span>
@@ -483,63 +744,7 @@ const TeacherDashboard = ({ onLogout }) => {
           </div>
         </div>
 
-        <div className="dashboard-content">
-          {/* Stats Cards Row */}
-          <div className="stats-container">
-            <div className="metric-card green">
-              <div className="metric-number">255</div>
-              <div className="metric-label">TODAY VISITORS</div>
-              <div className="metric-footer">More info →</div>
-            </div>
-            
-            <div className="metric-card yellow">
-              <div className="metric-number">6105</div>
-              <div className="metric-label">STUDENTS</div>
-              <div className="metric-footer">More info →</div>
-            </div>
-            
-            <div className="metric-card red">
-              <div className="metric-number">23910501</div>
-              <div className="metric-label">TOTAL VISITORS</div>
-              <div className="metric-footer">More info →</div>
-            </div>
-          </div>
-
-          {/* Notifications and MyBox Section */}
-          <div className="content-sections">
-            <div className="notifications-section">
-              <h3>🔔 Notifications</h3>
-              <div className="notification-item">
-                <p>New course content uploaded for Advanced Algorithms</p>
-                <small>2 hours ago</small>
-              </div>
-              <div className="notification-item">
-                <p>Assignment submissions due tomorrow</p>
-                <small>1 day ago</small>
-              </div>
-              <div className="notification-item">
-                <p>Faculty meeting scheduled for Friday</p>
-                <small>3 days ago</small>
-              </div>
-            </div>
-            
-            <div className="mybox-section">
-              <h3>📦 My Box</h3>
-              <div className="mybox-item">
-                <p>Grade submissions for Semester 1</p>
-                <small>Pending review</small>
-              </div>
-              <div className="mybox-item">
-                <p>Research paper submission</p>
-                <small>Draft saved</small>
-              </div>
-              <div className="mybox-item">
-                <p>Conference registration</p>
-                <small>Completed</small>
-              </div>
-            </div>
-          </div>
-        </div>
+        {renderContent()}
       </div>
     </div>
   );

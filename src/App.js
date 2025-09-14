@@ -62,6 +62,10 @@ function AppContent() {
   const navigate = useNavigate();
   const [loginState, setLoginState] = useState(null); // null, 'student', 'teacher'
   
+  // Check if it's teacher portal based on URL parameter
+  const urlParams = new URLSearchParams(location.search);
+  const isTeacherPortal = urlParams.get('teacher') === 'true';
+  
   // Get the action from URL query parameters using the helper function
   const action = getCurrentAction(location);
 
@@ -81,7 +85,7 @@ function AppContent() {
   if (!loginState) {
     return <LoginPage onLogin={setLoginState} />;
   }
-  if (loginState === 'teacher') {
+  if (loginState === 'teacher' || isTeacherPortal) {
     return <TeacherDashboard onLogout={handleLogout} />;
   }
 
