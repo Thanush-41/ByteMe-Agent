@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTE_ACTIONS, getCurrentAction } from './constants/routeConstants';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -54,13 +56,14 @@ import BonafideCertificate from './pages/BonafideCertificate';
 import NoDues from './pages/print-forms/NoDues';
 import TCForm from './pages/print-forms/TCForm';
 import './styles/App.css';
-import LoginPage from './pages/LoginPage';
 import TeacherDashboard from './pages/TeacherDashboard';
+import ChatBox from './components/ChatBox';
+import { useAuth } from './contexts/AuthContext';
 
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [loginState, setLoginState] = useState(null); // null, 'student', 'teacher'
+  const { currentUser, logout } = useAuth();
   
   // Check if it's teacher portal based on URL parameter
   const urlParams = new URLSearchParams(location.search);
@@ -78,14 +81,12 @@ function AppContent() {
   };
 
   const handleLogout = () => {
-    setLoginState(null);
+    logout();
     navigate('/');
   };
 
-  if (!loginState) {
-    return <LoginPage onLogin={setLoginState} />;
-  }
-  if (loginState === 'teacher' || isTeacherPortal) {
+  // Check if current user is a teacher
+  if (currentUser?.role === 'teacher' || isTeacherPortal) {
     return <TeacherDashboard onLogout={handleLogout} />;
   }
 
@@ -224,20 +225,26 @@ function AppContent() {
         onSectionChange={handleSectionChange}
       />
       <div className="main-content">
-        <Header currentSection={action} onLogout={handleLogout} />
+        <Header currentSection={action} />
         <div className="content-area">
           {renderContent()}
         </div>
       </div>
+      {/* ChatBox - only visible for students */}
+      <ChatBox />
     </div>
   );
 }
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ProtectedRoute>
+          <AppContent />
+        </ProtectedRoute>
+      </Router>
+    </AuthProvider>
   );
 }
 

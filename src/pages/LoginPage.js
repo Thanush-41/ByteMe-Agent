@@ -1,25 +1,37 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import './LoginPage.css';
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const { login, isAuthenticated } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username === 'student' && password === 'student') {
-      onLogin('student');
-      navigate('/');
-    } else if (username === 'teacher' && password === 'teacher') {
-      onLogin('teacher');
-      navigate('/?teacher=true');
-    } else {
-      setError('Invalid credentials. Please try again.');
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const result = await login(username, password);
+      
+      if (!result.success) {
+        setError(result.error || 'Invalid credentials. Please try again.');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="login-page-bg">
@@ -33,6 +45,7 @@ const LoginPage = ({ onLogin }) => {
           placeholder="User Name"
           value={username}
           onChange={e => setUsername(e.target.value)}
+          disabled={isLoading}
           autoFocus
         />
         <input
@@ -40,8 +53,11 @@ const LoginPage = ({ onLogin }) => {
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
+          disabled={isLoading}
         />
-        <button type="submit">Sign In</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Signing in...' : 'Sign In'}
+        </button>
         <div className="forgot-password">I forgot my password</div>
         {error && <div className="login-error">{error}</div>}
       </form>
