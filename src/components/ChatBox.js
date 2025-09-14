@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './ChatBox.css';
 import { sendMessage, testConnection, EZilSQLService } from '../config/ezilsqlConfig';
 import { useAuth } from '../contexts/AuthContext';
+import ChatbotIntelligence from '../services/ChatbotIntelligence';
+import NavigationService from '../services/NavigationService';
+import PageDataService from '../services/PageDataService';
 
 const ChatBox = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -126,6 +129,35 @@ const ChatBox = () => {
     }
   }, [isExpanded]);
 
+  // Handle navigation confirmation response
+  const handleNavigationConfirm = (action, navigationAction, navigationLabel) => {
+    if (action === 'confirm' || action === 'navigate') {
+      const result = NavigationService.handleNavigationResponse('navigate', navigationAction, navigate);
+      
+      const confirmMessage = {
+        id: Date.now(),
+        text: result.message,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, confirmMessage]);
+      
+      // Log the navigation
+      NavigationService.logNavigation(navigationAction, 'chat_confirmed', {
+        userConfirmed: true
+      });
+      
+    } else if (action === 'cancel') {
+      const cancelMessage = {
+        id: Date.now(),
+        text: "👍 No problem! Is there anything else I can help you with?",
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, cancelMessage]);
+    }
+  };
+
   // Portal search function
   const searchPortalData = (query) => {
     console.log('🔍 searchPortalData called with query:', query);
@@ -226,60 +258,6 @@ const ChatBox = () => {
     });
   };
 
-  // Format portal search results for display with interactive navigation
-  const formatPortalResults = (results, includeNavigation = true) => {
-    if (results.length === 0) {
-      return null;
-    }
-
-    const maxResults = 3; // Limit to top 3 results for cleaner display
-    const topResults = results.slice(0, maxResults);
-    
-    let response = `🔍 **I found ${results.length} relevant portal page${results.length > 1 ? 's' : ''}:**\n\n`;
-    
-    topResults.forEach((result, index) => {
-      response += `${index + 1}. **${result.title}**\n`;
-      response += `   📝 ${result.description}\n`;
-      if (includeNavigation) {
-        response += `   🌐 Would you like me to open this page?\n`;
-      } else {
-        response += `   🔗 URL: ${result.url}\n`;
-      }
-      response += `\n`;
-    });
-
-    if (results.length > maxResults) {
-      response += `... and ${results.length - maxResults} more result${results.length - maxResults > 1 ? 's' : ''}\n\n`;
-    }
-
-    return response;
-  };
-
-  // Handle navigation button clicks
-  const handleNavigationButtonClick = (action, navData) => {
-    if (action === 'continue') {
-      handlePortalNavigation(navData.url, navData.title);
-      
-      // Add confirmation message
-      const confirmMessage = {
-        id: Date.now(),
-        text: `🚀 Opening **${navData.title}** page...`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, confirmMessage]);
-      
-    } else if (action === 'cancel') {
-      const cancelMessage = {
-        id: Date.now(),
-        text: "👍 No problem! Is there anything else I can help you with?",
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, cancelMessage]);
-    }
-  };
-
   // Handle navigation to portal pages using React Router
   const handlePortalNavigation = (url, title) => {
     try {
@@ -341,18 +319,6 @@ const ChatBox = () => {
     }
   };
 
-  // Create interactive navigation buttons component
-  const createNavigationButtons = (results) => {
-    if (!results || results.length === 0) return null;
-    
-    const maxButtons = 3;
-    const topResults = results.slice(0, maxButtons);
-    
-    return topResults.map((result, index) => (
-      `[🌐 Open ${result.title}](javascript:void(0))`
-    )).join(' | ');
-  };
-
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputText.trim()) return;
@@ -374,69 +340,132 @@ const ChatBox = () => {
     setIsTyping(true);
 
     try {
-      // Call EZilSQL service directly
-      console.log('� Sending message to EZilSQL:', currentInput);
+      // First, try to understand the query using ChatbotIntelligence
+      console.log('🧠 Analyzing user query:', currentInput);
+      const queryAnalysis = ChatbotIntelligence.analyzeQuery(currentInput);
+      console.log('📊 Query analysis result:', queryAnalysis);
       
-      // Get conversation history for context (last 8 messages)
-      const conversationHistory = messages.slice(-8).map(msg => ({
-        role: msg.sender === 'bot' ? 'assistant' : 'user',
-        content: msg.text
-      }));
+      // Generate intelligent response based on analysis
+      const intelligentResponse = await ChatbotIntelligence.generateResponse(queryAnalysis);
+      console.log('🤖 Generated intelligent response:', intelligentResponse);
       
-      // Call EZilSQL service
-      const apiResponse = await sendMessage(currentInput, conversationHistory);
-      
-      console.log('� EZilSQL response:', apiResponse);
-      
-      // Check if this is a portal navigation response
-      if (apiResponse.isPortalNavigation && apiResponse.portalUrl) {
-        console.log('🎯 Portal navigation detected, URL:', apiResponse.portalUrl);
-        
-        // Add the AI response first
+      if (intelligentResponse.hasData || intelligentResponse.navigation || intelligentResponse.isGreeting) {
+        // We have a good response from our intelligent system
         const botResponse = {
           id: Date.now() + 1,
-          text: apiResponse.response,
+          text: intelligentResponse.text,
           sender: 'bot',
-          timestamp: new Date()
+          timestamp: new Date(),
+          hasData: intelligentResponse.hasData,
+          data: intelligentResponse.data,
+          navigation: intelligentResponse.navigation
         };
+        
         setMessages(prev => [...prev, botResponse]);
         
-        // Automatically navigate after a short delay to let the user see the response
-        setTimeout(() => {
-          console.log('🚀 Auto-navigating to:', apiResponse.portalUrl);
-          handlePortalNavigation(apiResponse.portalUrl, 'Portal Page');
+        // Handle navigation if suggested
+        if (intelligentResponse.navigation) {
+          if (intelligentResponse.navigation.immediate) {
+            // Navigate immediately
+            setTimeout(() => {
+              const url = NavigationService.createNavigationUrl(intelligentResponse.navigation.action);
+              navigate(url);
+              NavigationService.logNavigation(intelligentResponse.navigation.action, 'chat_immediate', {
+                query: currentInput,
+                analysis: queryAnalysis
+              });
+              
+              const navMessage = {
+                id: Date.now() + 2,
+                text: `🚀 Navigated to ${intelligentResponse.navigation.label}`,
+                sender: 'bot',
+                timestamp: new Date()
+              };
+              setMessages(prev => [...prev, navMessage]);
+            }, 1000);
+          } else if (intelligentResponse.navigation.suggested) {
+            // Add navigation button directly without asking confirmation
+            setTimeout(() => {
+              const navButtonMessage = {
+                id: Date.now() + 2,
+                text: `✨ Here's your ${intelligentResponse.navigation.label.toLowerCase()} for more details:`,
+                sender: 'bot',
+                timestamp: new Date(),
+                isNavigationConfirm: true,
+                navigationAction: intelligentResponse.navigation.action,
+                navigationLabel: intelligentResponse.navigation.label,
+                showDirectButton: true
+              };
+              setMessages(prev => [...prev, navButtonMessage]);
+            }, 500);
+          }
+        }
+        
+        setIsConnected(true);
+        
+      } else {
+        // Fallback to external AI service if no intelligent response
+        console.log('🔄 Falling back to EZilSQL service...');
+        
+        // Get conversation history for context (last 8 messages)
+        const conversationHistory = messages.slice(-8).map(msg => ({
+          role: msg.sender === 'bot' ? 'assistant' : 'user',
+          content: msg.text
+        }));
+        
+        // Call EZilSQL service
+        const apiResponse = await sendMessage(currentInput, conversationHistory);
+        console.log('🔗 EZilSQL response:', apiResponse);
+        
+        // Check if this is a portal navigation response
+        if (apiResponse.isPortalNavigation && apiResponse.portalUrl) {
+          console.log('🎯 Portal navigation detected, URL:', apiResponse.portalUrl);
           
-          // Add navigation confirmation message
-          const navMessage = {
-            id: Date.now() + 2,
-            text: `🚀 Automatically opening the page for you...`,
+          // Add the AI response first
+          const botResponse = {
+            id: Date.now() + 1,
+            text: apiResponse.response,
             sender: 'bot',
             timestamp: new Date()
           };
-          setMessages(prev => [...prev, navMessage]);
-        }, 1500); // 1.5 second delay
+          setMessages(prev => [...prev, botResponse]);
+          
+          // Automatically navigate after a short delay
+          setTimeout(() => {
+            console.log('🚀 Auto-navigating to:', apiResponse.portalUrl);
+            handlePortalNavigation(apiResponse.portalUrl, 'Portal Page');
+            
+            const navMessage = {
+              id: Date.now() + 2,
+              text: `🚀 Automatically opening the page for you...`,
+              sender: 'bot',
+              timestamp: new Date()
+            };
+            setMessages(prev => [...prev, navMessage]);
+          }, 1500);
+          
+        } else {
+          // Regular response - no navigation
+          const botResponse = {
+            id: Date.now() + 1,
+            text: apiResponse.response || 'Sorry, I could not process your request at the moment.',
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, botResponse]);
+        }
         
-      } else {
-        // Regular response - no navigation
-        const botResponse = {
-          id: Date.now() + 1,
-          text: apiResponse.response || 'Sorry, I could not process your request at the moment.',
-          sender: 'bot',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, botResponse]);
+        setIsConnected(true);
       }
-      
-      setIsConnected(true); // Mark as connected if successful
       
     } catch (error) {
       console.error('Error getting AI response:', error);
-      setIsConnected(false); // Mark as disconnected
+      setIsConnected(false);
       
-      // Fallback response if API fails
+      // Fallback response if everything fails
       const fallbackResponse = {
         id: Date.now() + 1,
-        text: "I apologize, but I'm experiencing technical difficulties connecting to the AI service. Please try again later, or contact support if the issue persists.",
+        text: "I apologize, but I'm experiencing technical difficulties. However, I can still help you navigate to different pages. Try asking 'show my attendance' or 'open timetable'.",
         sender: 'bot',
         timestamp: new Date()
       };
@@ -490,22 +519,27 @@ const ChatBox = () => {
     setIsTyping(false);
   };
 
-
   const resetConversation = async () => {
     setIsTyping(true);
-    console.log('� Resetting EZilSQL conversation...');
+    console.log('🔄 Resetting EZilSQL conversation...');
     
     try {
-      EZilSQLService.resetConversation();
+      const result = await EZilSQLService.resetConversation();
       
       const message = {
         id: Date.now(),
-        text: "🔄 Conversation reset successfully! Starting fresh conversation with EZilSQL API.",
+        text: result.success 
+          ? `🔄 Conversation reset successfully!\n✅ New conversation ID: ${result.conversationId}`
+          : `❌ Failed to reset conversation.\nError: ${result.error}`,
         sender: 'bot',
         timestamp: new Date()
       };
       
       setMessages(prev => [...prev, message]);
+      
+      if (result.success) {
+        setIsConnected(true);
+      }
     } catch (error) {
       const errorMessage = {
         id: Date.now(),
@@ -519,134 +553,145 @@ const ChatBox = () => {
     setIsTyping(false);
   };
 
-  const testNavigationResponse = async () => {
-    setIsTyping(true);
-    console.log('🧪 Testing navigation response...');
-    
-    try {
-      const testMessage = "open my timetable";
-      const result = await sendMessage(testMessage);
-      
-      const message = {
-        id: Date.now(),
-        text: `🧪 Navigation Test Result:\n📤 Test message: "${testMessage}"\n📥 Response: ${result.response.substring(0, 200)}${result.response.length > 200 ? '...' : ''}\n🔗 Portal URL: ${result.portalUrl || 'None'}\n🎯 Is Navigation: ${result.isPortalNavigation ? 'Yes' : 'No'}`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, message]);
-    } catch (error) {
-      const errorMessage = {
-        id: Date.now(),
-        text: `❌ Navigation Test Error: ${error.message}`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    }
-    
-    setIsTyping(false);
-  };
-
-  const showAPIStatus = async () => {
-    const message = {
-      id: Date.now(),
-      text: `🔧 **EZilSQL API Status:**\n\n🌐 Endpoint: ${process.env.REACT_APP_EZILSQL_API_URL}\n🔑 API Key: ${process.env.REACT_APP_EZILSQL_API_KEY ? '✅ Configured' : '❌ Missing'}\n📡 Connection: ${isConnected ? '✅ Connected' : '❌ Disconnected'}\n\n🔬 Use the test buttons below to verify functionality.`,
-      sender: 'bot',
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, message]);
-  };
-
-  const testInternalNavigation = async () => {
-    setIsTyping(true);
-    console.log('🧪 Testing internal navigation...');
-    
-    try {
-      // Test navigation to attendance page
-      const testUrl = "/?action=attendance";
-      const testTitle = "Attendance";
-      
-      const message = {
-        id: Date.now(),
-        text: `🧪 **Navigation Test:**\n📍 Testing navigation to: ${testTitle}\n🔗 URL: ${testUrl}\n\n⏳ Navigating in 2 seconds...`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, message]);
-      
-      // Navigate after a short delay
-      setTimeout(() => {
-        handlePortalNavigation(testUrl, testTitle);
-      }, 2000);
-      
-    } catch (error) {
-      const errorMessage = {
-        id: Date.now(),
-        text: `❌ Navigation Test Error: ${error.message}`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    }
-    
-    setIsTyping(false);
-  };
-
   return (
-    <div className="chatbox-container">
-      {/* Expanded Chat Messages - only show when expanded */}
+    <div className={`chatbox-container ${isExpanded ? 'expanded' : ''}`}>
+      {/* Expanded Chat Window */}
       {isExpanded && (
-        <div className="chat-messages-container">
-          {/* Debug buttons removed as requested */}
-
-          <div className="chatbox-messages">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
+        <div className="chat-window">
+          <div className="chat-header">
+            <div className="header-content">
+              <h3>EZil Samvidha AI Assistant</h3>
+              <div className="connection-status">
+                <span className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}></span>
+                <span className="status-text">{isConnected ? 'Connected' : 'Disconnected'}</span>
+              </div>
+            </div>
+            <div className="header-buttons">
+              <button 
+                onClick={() => setShowDebug(!showDebug)}
+                className="debug-button"
+                title="Toggle Debug Options"
               >
-                {message.sender === 'bot' && (
-                  <div className="message-avatar">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z" fill="currentColor"/>
+                ⚙️
+              </button>
+              <button onClick={toggleChat} className="close-button" aria-label="Close chat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Debug Panel */}
+          {showDebug && (
+            <div className="debug-panel">
+              <h4>Debug Options</h4>
+              <div className="debug-buttons">
+                <button onClick={testEZilSQLConnection} className="debug-btn">
+                  Test Connection
+                </button>
+                <button onClick={resetConversation} className="debug-btn">
+                  Reset Conversation
+                </button>
+                <button onClick={() => setMessages([])} className="debug-btn">
+                  Clear Chat
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="messages-container">
+            {messages.map((message, index) => (
+              <div key={message.id} className={`message ${message.sender}`}>
+                <div className="message-avatar">
+                  {message.sender === 'bot' ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" strokeWidth="2"/>
                     </svg>
-                  </div>
-                )}
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+                    </svg>
+                  )}
+                </div>
                 <div className="message-content">
-                  <div className="message-text">{message.text}</div>
-                  
-                  {/* Navigation Buttons */}
-                  {message.showNavigationButtons && message.pendingNavigation && (
-                    <div className="navigation-buttons">
-                      <button 
-                        className="nav-button continue-btn"
-                        onClick={() => handleNavigationButtonClick('continue', message.pendingNavigation)}
-                      >
-                        🚀 Continue
-                      </button>
-                      <button 
-                        className="nav-button cancel-btn"
-                        onClick={() => handleNavigationButtonClick('cancel', message.pendingNavigation)}
-                      >
-                        ❌ Cancel
-                      </button>
+                  <div 
+                    className="message-text"
+                    dangerouslySetInnerHTML={{
+                      __html: message.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
+                    }}
+                  />
+                  {message.isNavigationConfirm && (
+                    <div className="navigation-buttons" style={{ marginTop: '8px' }}>
+                      {message.showDirectButton ? (
+                        // Show single "Open" button without asking confirmation
+                        <button 
+                          className="nav-button primary"
+                          onClick={() => handleNavigationConfirm('confirm', message.navigationAction, message.navigationLabel)}
+                          style={{ 
+                            padding: '8px 16px', 
+                            border: 'none', 
+                            borderRadius: '6px', 
+                            backgroundColor: '#3b82f6', 
+                            color: 'white', 
+                            fontSize: '13px',
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                          }}
+                        >
+                          📱 Open {message.navigationLabel}
+                        </button>
+                      ) : (
+                        // Show confirmation buttons (Yes/No)
+                        <>
+                          <button 
+                            className="nav-button primary"
+                            onClick={() => handleNavigationConfirm('confirm', message.navigationAction, message.navigationLabel)}
+                            style={{ 
+                              padding: '6px 12px', 
+                              marginRight: '8px', 
+                              border: 'none', 
+                              borderRadius: '4px', 
+                              backgroundColor: '#3b82f6', 
+                              color: 'white', 
+                              fontSize: '12px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Yes, open {message.navigationLabel}
+                          </button>
+                          <button 
+                            className="nav-button secondary"
+                            onClick={() => handleNavigationConfirm('cancel', message.navigationAction, message.navigationLabel)}
+                            style={{ 
+                              padding: '6px 12px', 
+                              border: 'none', 
+                              borderRadius: '4px', 
+                              backgroundColor: '#e5e7eb', 
+                              color: '#374151', 
+                              fontSize: '12px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            No, thanks
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
-                  
-                  <div className="message-time">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <div className="message-timestamp">
+                    {new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                   </div>
                 </div>
               </div>
             ))}
-            
             {isTyping && (
-              <div className="message bot-message">
+              <div className="message bot">
                 <div className="message-avatar">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z" fill="currentColor"/>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="3" fill="currentColor"/>
                   </svg>
                 </div>
                 <div className="message-content">
