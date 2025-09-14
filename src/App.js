@@ -64,6 +64,7 @@ function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   
   // Check if it's teacher portal based on URL parameter
   const urlParams = new URLSearchParams(location.search);
@@ -223,8 +224,9 @@ function AppContent() {
       <Sidebar 
         activeSection={action} 
         onSectionChange={handleSectionChange}
+        onHoverChange={setIsSidebarExpanded}
       />
-      <div className="main-content">
+      <div className={`main-content ${isSidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
         <Header currentSection={action} />
         <div className="content-area">
           {renderContent()}

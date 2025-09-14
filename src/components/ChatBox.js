@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ChatBox.css';
-import { sendMessage, testConnection } from '../config/azureConfigNew';
+import { sendMessage, testConnection, EZilSQLService } from '../config/ezilsqlConfig';
 import { useAuth } from '../contexts/AuthContext';
 
 const ChatBox = () => {
@@ -16,6 +17,60 @@ const ChatBox = () => {
   const inputRef = useRef(null);
 
   const { currentUser } = useAuth();
+  const navigate = useNavigate(); // React Router hook for navigation
+
+  // Mapping function to convert portal URLs/names to action parameters
+  const getActionFromUrl = (url) => {
+    // Common mappings for portal pages
+    const urlMappings = {
+      // Attendance related
+      'attendance': 'attendance',
+      'attendence': 'attendance', // common typo
+      'attandance': 'attendance', // common typo
+      'pat-attendance': 'pat-attendance',
+      
+      // Timetable related
+      'timetable': 'timetable',
+      'time-table': 'timetable',
+      'timetabel': 'timetable', // common typo
+      
+      // Exam related
+      'cia-marks': 'cia-marks',
+      'marks': 'cia-marks',
+      'result': 'exam-result',
+      'results': 'exam-result',
+      'exam-registration': 'exam-registration',
+      'admit-card': 'admit-card',
+      
+      // Course related
+      'course-content': 'course-content',
+      'course-registration': 'course-registration',
+      'regular-courses': 'regular-courses',
+      
+      // Projects
+      'project-selection': 'project-selection',
+      'project-team': 'project-team',
+      'project-work': 'project-work',
+      
+      // Other common pages
+      'dashboard': 'dashboard',
+      'academics': 'academics',
+      'examinations': 'examinations',
+      'upload-cvc': 'upload-cvc',
+      'feedback': 'feedback',
+      'payments': 'online-fees-payment',
+      'fee': 'online-fees-payment',
+      'fees': 'online-fees-payment'
+    };
+
+    // Normalize the URL/name
+    const normalized = url.toLowerCase()
+      .replace(/^\/+|\/+$/g, '') // Remove leading/trailing slashes
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/[^a-z0-9-]/g, ''); // Remove special characters
+
+    return urlMappings[normalized] || normalized;
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -225,23 +280,60 @@ const ChatBox = () => {
     }
   };
 
-  // Handle navigation to portal pages
+  // Handle navigation to portal pages using React Router
   const handlePortalNavigation = (url, title) => {
     try {
-      // Convert relative URL to full URL with the correct portal base URL
-      const baseUrl = 'http://localhost:3000'; // Your portal base URL
-      const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : url;
+      console.log(`🚀 Internal navigation to: ${url} (${title})`);
       
-      console.log(`🚀 Navigating to: ${fullUrl}`);
+      // Extract the action parameter from the URL
+      let actionParam = null;
       
-      // Open in the same tab (similar to Copilot behavior)
-      window.location.href = fullUrl;
+      // Handle different URL formats
+      if (url.includes('?action=')) {
+        // URL like "/?action=attendance" or "/dashboard?action=attendance"
+        const urlParams = new URLSearchParams(url.split('?')[1]);
+        actionParam = urlParams.get('action');
+      } else if (url.includes('action=')) {
+        // URL like "action=attendance"
+        actionParam = url.split('action=')[1].split('&')[0];
+      } else {
+        // Use the mapping function for other formats
+        actionParam = getActionFromUrl(url);
+      }
+      
+      if (actionParam && actionParam !== 'dashboard') {
+        // Use React Router's navigate to change the URL and trigger internal navigation
+        navigate(`/?action=${actionParam}`);
+        console.log(`✅ Navigated to: /?action=${actionParam}`);
+        
+        // Add success message
+        const successMessage = {
+          id: Date.now(),
+          text: `🎯 Successfully navigated to **${title}** page!`,
+          sender: 'bot',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, successMessage]);
+        
+      } else {
+        // Navigate to dashboard
+        navigate('/');
+        console.log('✅ Navigated to dashboard');
+        
+        const successMessage = {
+          id: Date.now(),
+          text: `🏠 Successfully navigated to **Dashboard**!`,
+          sender: 'bot',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, successMessage]);
+      }
       
     } catch (error) {
       console.error('Navigation error:', error);
       const errorMessage = {
         id: Date.now(),
-        text: `❌ Sorry, I couldn't open the ${title} page. You can manually navigate to: ${url}`,
+        text: `❌ Sorry, I couldn't navigate to the ${title} page. Error: ${error.message}`,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -279,105 +371,66 @@ const ChatBox = () => {
     setIsTyping(true);
 
     try {
-      // Step 1: Search portal data first
-      console.log('🔍 Searching portal data for:', currentInput);
-      const portalResults = searchPortalData(currentInput);
+      // Call EZilSQL service directly
+      console.log('� Sending message to EZilSQL:', currentInput);
       
-      // Step 2: Check if this looks like a navigation request
-      const navigationKeywords = ['go to', 'open', 'navigate to', 'show me', 'take me to', 'visit'];
-      const directPageKeywords = [
-        'timetable', 'time table', 'timetabel',
-        'attendance', 'attendence', 'attandance', 'atendance', 
-        'marks', 'marksheet', 'mark sheet', 'result', 'results',
-        'exam', 'exams', 'examination', 'fee', 'fees', 'payment',
-        'course', 'registration', 'project', 'upload', 'feedback'
-      ];
-      
-      const hasNavigationKeyword = navigationKeywords.some(keyword => 
-        currentInput.toLowerCase().includes(keyword)
-      );
-      
-      const isDirectPageRequest = directPageKeywords.some(keyword => 
-        currentInput.toLowerCase().includes(keyword)
-      );
-      
-      const isNavigationRequest = hasNavigationKeyword || (isDirectPageRequest && portalResults.length > 0);
-      
-      console.log('🔍 Portal results found:', portalResults.length);
-      console.log('🔍 Has navigation keyword:', hasNavigationKeyword);
-      console.log('🔍 Is direct page request:', isDirectPageRequest);
-      console.log('🔍 Final navigation decision:', isNavigationRequest);
-      console.log('🔍 Input:', currentInput);
-      
-      if (portalResults.length > 0 && isNavigationRequest) {
-        // This is a direct navigation request - offer Copilot-style continue/cancel
-        const topResult = portalResults[0];
-        
-        console.log('🎯 Creating navigation prompt for:', topResult.title);
-        
-        const navigationPrompt = {
-          id: Date.now() + 1,
-          text: `🎯 I found the **${topResult.title}** page!\n\n📝 ${topResult.description}\n\n🤔 Would you like me to open this page for you?`,
-          sender: 'bot',
-          timestamp: new Date(),
-          showNavigationButtons: true,
-          pendingNavigation: {
-            url: topResult.url,
-            title: topResult.title
-          }
-        };
-        
-        console.log('📨 Adding navigation message:', navigationPrompt);
-        setMessages(prev => [...prev, navigationPrompt]);
-        setIsTyping(false);
-        return;
-      }
-      
-      // Step 3: For regular queries, provide AI response with portal context
-      const portalResultsText = formatPortalResults(portalResults, false);
-      let contextualPrompt = currentInput;
-      let portalContext = '';
-      
-      if (portalResults.length > 0) {
-        portalContext = `\n\nRelevant portal information:\n${portalResults.slice(0, 3).map(r => 
-          `- ${r.title}: ${r.description} (URL: ${r.url})`
-        ).join('\n')}`;
-        
-        contextualPrompt = `User query: ${currentInput}${portalContext}\n\nPlease provide a helpful response that references the relevant portal pages above when appropriate.`;
-      }
-
-      // Get conversation history for context (last 8 messages to leave room for portal context)
+      // Get conversation history for context (last 8 messages)
       const conversationHistory = messages.slice(-8).map(msg => ({
         role: msg.sender === 'bot' ? 'assistant' : 'user',
         content: msg.text
       }));
       
-      // Call Azure OpenAI service with enhanced context
-      const aiResponse = await sendMessage(contextualPrompt, conversationHistory);
+      // Call EZilSQL service
+      const apiResponse = await sendMessage(currentInput, conversationHistory);
       
-      // Step 3: Combine portal results with AI response
-      let finalResponse = '';
+      console.log('� EZilSQL response:', apiResponse);
       
-      if (portalResultsText) {
-        finalResponse = portalResultsText + '\n---\n\n🤖 **AI Assistant Response:**\n' + aiResponse;
+      // Check if this is a portal navigation response
+      if (apiResponse.isPortalNavigation && apiResponse.portalUrl) {
+        console.log('🎯 Portal navigation detected, URL:', apiResponse.portalUrl);
+        
+        // Add the AI response first
+        const botResponse = {
+          id: Date.now() + 1,
+          text: apiResponse.response,
+          sender: 'bot',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, botResponse]);
+        
+        // Automatically navigate after a short delay to let the user see the response
+        setTimeout(() => {
+          console.log('🚀 Auto-navigating to:', apiResponse.portalUrl);
+          handlePortalNavigation(apiResponse.portalUrl, 'Portal Page');
+          
+          // Add navigation confirmation message
+          const navMessage = {
+            id: Date.now() + 2,
+            text: `🚀 Automatically opening the page for you...`,
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, navMessage]);
+        }, 1500); // 1.5 second delay
+        
       } else {
-        finalResponse = aiResponse;
+        // Regular response - no navigation
+        const botResponse = {
+          id: Date.now() + 1,
+          text: apiResponse.response || 'Sorry, I could not process your request at the moment.',
+          sender: 'bot',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, botResponse]);
       }
       
-      const botResponse = {
-        id: Date.now() + 1,
-        text: finalResponse,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, botResponse]);
       setIsConnected(true); // Mark as connected if successful
+      
     } catch (error) {
       console.error('Error getting AI response:', error);
       setIsConnected(false); // Mark as disconnected
       
-      // Fallback response if Azure AI fails
+      // Fallback response if API fails
       const fallbackResponse = {
         id: Date.now() + 1,
         text: "I apologize, but I'm experiencing technical difficulties connecting to the AI service. Please try again later, or contact support if the issue persists.",
@@ -402,9 +455,9 @@ const ChatBox = () => {
     }
   };
 
-  const testAzureConnection = async () => {
+  const testEZilSQLConnection = async () => {
     setIsTyping(true);
-    console.log('🚀 Testing Azure OpenAI gpt-4.1 deployment...');
+    console.log('🚀 Testing EZilSQL API connection...');
     
     try {
       const result = await testConnection();
@@ -412,8 +465,8 @@ const ChatBox = () => {
       const message = {
         id: Date.now(),
         text: result.success 
-          ? `🎉 Azure OpenAI gpt-4.1 SUCCESS!\n✅ Deployment: gpt-4.1\n✅ Endpoint: ${process.env.REACT_APP_AZURE_ENDPOINT}\n✅ Response: ${result.response.substring(0, 100)}${result.response.length > 100 ? '...' : ''}`
-          : `❌ Azure OpenAI gpt-4.1 test failed.\nError: ${result.error}\nEndpoint: ${process.env.REACT_APP_AZURE_ENDPOINT}\nDeployment: gpt-4.1`,
+          ? `🎉 EZilSQL API Connection SUCCESS!\n✅ Endpoint: ${process.env.REACT_APP_EZILSQL_API_URL}\n✅ Response: ${result.response.substring(0, 100)}${result.response.length > 100 ? '...' : ''}\n✅ Conversation ID: ${result.conversationId || 'New conversation'}`
+          : `❌ EZilSQL API connection failed.\nError: ${result.error}\nEndpoint: ${process.env.REACT_APP_EZILSQL_API_URL}`,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -423,7 +476,7 @@ const ChatBox = () => {
     } catch (error) {
       const errorMessage = {
         id: Date.now(),
-        text: `❌ Azure OpenAI Test Error: ${error.message}`,
+        text: `❌ EZilSQL API Test Error: ${error.message}`,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -434,58 +487,108 @@ const ChatBox = () => {
     setIsTyping(false);
   };
 
-  const runDiscovery = async () => {
-    // Placeholder function - Azure discovery temporarily disabled
-    const message = {
-      id: Date.now(),
-      text: "🔍 Azure discovery is temporarily disabled. Use the 'Test Azure Connection' button to test the gpt-4.1 deployment.",
-      sender: 'bot',
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, message]);
-  };
 
-  const testAzureFoundryAgent = async () => {
+  const resetConversation = async () => {
     setIsTyping(true);
-    console.log('🚀 Testing Azure OpenAI gpt-4.1 deployment...');
+    console.log('� Resetting EZilSQL conversation...');
     
     try {
-      const result = await testConnection();
+      EZilSQLService.resetConversation();
       
       const message = {
         id: Date.now(),
-        text: result.success 
-          ? `🎉 Azure OpenAI gpt-4.1 SUCCESS!\n✅ Deployment: gpt-4.1\n✅ Endpoint: ${process.env.REACT_APP_AZURE_ENDPOINT}\n✅ Response: ${result.response.substring(0, 100)}${result.response.length > 100 ? '...' : ''}`
-          : `❌ Azure OpenAI gpt-4.1 test failed.\nError: ${result.error}\nEndpoint: ${process.env.REACT_APP_AZURE_ENDPOINT}\nDeployment: gpt-4.1`,
+        text: "🔄 Conversation reset successfully! Starting fresh conversation with EZilSQL API.",
         sender: 'bot',
         timestamp: new Date()
       };
       
       setMessages(prev => [...prev, message]);
-      setIsConnected(result.success);
     } catch (error) {
       const errorMessage = {
         id: Date.now(),
-        text: `❌ Foundry Agent Test Error: ${error.message}`,
+        text: `❌ Reset Error: ${error.message}`,
         sender: 'bot',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
-      setIsConnected(false);
     }
     
     setIsTyping(false);
   };
 
-  const testAIProjects = async () => {
-    // Placeholder function - AI Projects testing temporarily disabled
+  const testNavigationResponse = async () => {
+    setIsTyping(true);
+    console.log('🧪 Testing navigation response...');
+    
+    try {
+      const testMessage = "open my timetable";
+      const result = await sendMessage(testMessage);
+      
+      const message = {
+        id: Date.now(),
+        text: `🧪 Navigation Test Result:\n📤 Test message: "${testMessage}"\n📥 Response: ${result.response.substring(0, 200)}${result.response.length > 200 ? '...' : ''}\n🔗 Portal URL: ${result.portalUrl || 'None'}\n🎯 Is Navigation: ${result.isPortalNavigation ? 'Yes' : 'No'}`,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, message]);
+    } catch (error) {
+      const errorMessage = {
+        id: Date.now(),
+        text: `❌ Navigation Test Error: ${error.message}`,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
+    
+    setIsTyping(false);
+  };
+
+  const showAPIStatus = async () => {
     const message = {
       id: Date.now(),
-      text: "🤖 AI Projects testing is temporarily disabled. The working gpt-4.1 deployment is already configured and ready to use!",
+      text: `🔧 **EZilSQL API Status:**\n\n🌐 Endpoint: ${process.env.REACT_APP_EZILSQL_API_URL}\n🔑 API Key: ${process.env.REACT_APP_EZILSQL_API_KEY ? '✅ Configured' : '❌ Missing'}\n📡 Connection: ${isConnected ? '✅ Connected' : '❌ Disconnected'}\n\n🔬 Use the test buttons below to verify functionality.`,
       sender: 'bot',
       timestamp: new Date()
     };
     setMessages(prev => [...prev, message]);
+  };
+
+  const testInternalNavigation = async () => {
+    setIsTyping(true);
+    console.log('🧪 Testing internal navigation...');
+    
+    try {
+      // Test navigation to attendance page
+      const testUrl = "/?action=attendance";
+      const testTitle = "Attendance";
+      
+      const message = {
+        id: Date.now(),
+        text: `🧪 **Navigation Test:**\n📍 Testing navigation to: ${testTitle}\n🔗 URL: ${testUrl}\n\n⏳ Navigating in 2 seconds...`,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, message]);
+      
+      // Navigate after a short delay
+      setTimeout(() => {
+        handlePortalNavigation(testUrl, testTitle);
+      }, 2000);
+      
+    } catch (error) {
+      const errorMessage = {
+        id: Date.now(),
+        text: `❌ Navigation Test Error: ${error.message}`,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
+    
+    setIsTyping(false);
   };
 
   return (
@@ -496,17 +599,20 @@ const ChatBox = () => {
           {/* Debug Section - only show when expanded */}
           {isExpanded && (
             <div className="debug-section">
-              <button onClick={testAzureConnection} className="debug-button" disabled={isTyping}>
-                🔧 Test Azure Connection
+              <button onClick={testEZilSQLConnection} className="debug-button" disabled={isTyping}>
+                🔧 Test EZilSQL Connection
               </button>
-              <button onClick={testAzureFoundryAgent} className="debug-button" disabled={isTyping}>
-                🤖 Test Foundry Agent
+              <button onClick={resetConversation} className="debug-button" disabled={isTyping}>
+                🔄 Reset Conversation
               </button>
-              <button onClick={runDiscovery} className="debug-button" disabled={isTyping}>
-                🔍 Discover Azure Resources
+              <button onClick={testNavigationResponse} className="debug-button" disabled={isTyping}>
+                🧪 Test Navigation
               </button>
-              <button onClick={testAIProjects} className="debug-button" disabled={isTyping}>
-                🤖 Test AI Projects
+              <button onClick={testInternalNavigation} className="debug-button" disabled={isTyping}>
+                🎯 Test Internal Navigation
+              </button>
+              <button onClick={showAPIStatus} className="debug-button" disabled={isTyping}>
+                📊 API Status
               </button>
             </div>
           )}

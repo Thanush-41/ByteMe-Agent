@@ -12,17 +12,21 @@
   top: 0;
   z-index: 2000;
   min-width: 60px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
 .sidebar-expanded {
   width: 260px;
   min-width: 260px;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+  box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  overflow-x: visible;
 }
 
 .sidebar-collapsed {
   width: 60px;
   min-width: 60px;
+  overflow-x: hidden;
 }
 
 .sidebar-header {
@@ -78,6 +82,8 @@
 
 .menu-item {
   margin-bottom: 2px;
+  position: relative;
+  overflow: visible;
 }
 
 .menu-link {
@@ -136,50 +142,71 @@
 }
 
 .submenu {
-  background-color: #5a6268;
+  background-color: #495057;
   border-left: 3px solid #3498db;
+  overflow: visible;
+  transition: all 0.3s ease;
+  display: block !important;
+  opacity: 1 !important;
+  max-height: none !important;
+  min-height: auto;
 }
 
 .submenu-item {
-  display: flex;
+  display: flex !important;
   align-items: center;
   padding: 10px 20px 10px 40px;
-  color: #95a5a6;
+  color: #e9ecef !important;
   cursor: pointer;
   transition: all 0.3s ease;
   gap: 10px;
   font-size: 13px;
+  background-color: #495057 !important;
+  border: 1px solid #6c757d;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 1px;
 }
 
 .submenu-item:hover {
-  background-color: #5a6268;
-  color: white;
+  background-color: #6c757d !important;
+  color: white !important;
 }
 
 .submenu-item.active {
-  background-color: #2980b9;
-  color: white;
+  background-color: #2980b9 !important;
+  color: white !important;
 }
 
 .submenu-icon {
   font-size: 12px;
   width: 16px;
   text-align: center;
+  color: #6c757d;
 }
 
 .submenu-label {
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .submenu-wrapper {
   display: flex;
   flex-direction: column;
+  background-color: transparent;
+  overflow: visible;
 }
 
 .sub-submenu {
   background-color: #495057;
   border-left: 2px solid #6c757d;
   margin-left: 20px;
+  overflow: visible;
+  transition: all 0.3s ease;
+  display: block;
+  opacity: 1;
 }
 
 .sub-submenu-item {
@@ -188,13 +215,17 @@
   padding: 8px 15px 8px 25px;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #adb5bd;
+  color: #e9ecef;
   gap: 8px;
   font-size: 12px;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
 }
 
 .sub-submenu-item:hover {
-  background-color: #5a6268;
+  background-color: #6c757d;
   color: white;
 }
 
@@ -207,10 +238,14 @@
   font-size: 10px;
   width: 12px;
   text-align: center;
+  color: #6c757d;
 }
 
 .sub-submenu-label {
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Responsive Design */

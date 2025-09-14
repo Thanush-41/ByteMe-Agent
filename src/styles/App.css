@@ -14,7 +14,7 @@ body {
 }
 
 .app {
-  display: block;
+  display: flex;
   height: 100vh;
   overflow: hidden;
 }
@@ -27,7 +27,18 @@ body {
   min-width: 0;
   width: calc(100% - 60px);
   height: 100vh;
-  transition: margin-left 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* When sidebar is expanded */
+.main-content.sidebar-expanded {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 60px;
+  width: calc(100% - 60px);
 }
 
 .content-area {

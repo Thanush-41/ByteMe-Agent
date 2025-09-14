@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
 
-const Sidebar = ({ activeSection, onSectionChange }) => {
+const Sidebar = ({ activeSection, onSectionChange, onHoverChange }) => {
   const [expandedSections, setExpandedSections] = useState({
     academics: false,
     'course-registration': false,
@@ -21,6 +21,41 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
     }));
   };
 
+  // Auto-expand parent sections when a child is active
+  React.useEffect(() => {
+    const expandParentSections = (activeId) => {
+      const newExpanded = { ...expandedSections };
+      
+      // Check each menu item and its children
+      menuItems.forEach(item => {
+        if (item.children) {
+          // Check direct children
+          const hasActiveChild = item.children.some(child => child.id === activeId);
+          if (hasActiveChild) {
+            newExpanded[item.id] = true;
+          }
+          
+          // Check nested children
+          item.children.forEach(child => {
+            if (child.children) {
+              const hasActiveNestedChild = child.children.some(nestedChild => nestedChild.id === activeId);
+              if (hasActiveNestedChild) {
+                newExpanded[item.id] = true;
+                newExpanded[child.id] = true;
+              }
+            }
+          });
+        }
+      });
+      
+      setExpandedSections(newExpanded);
+    };
+
+    if (activeSection) {
+      expandParentSections(activeSection);
+    }
+  }, [activeSection]);
+
   const menuItems = [
     {
       id: 'dashboard',
@@ -33,7 +68,6 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Examinations',
       icon: '📝',
       type: 'expandable',
-      expanded: expandedSections.examinations,
       children: [
         { id: 'cia-marks', label: 'CIA Marks' },
         { id: 'admit-card', label: 'Admit Card' },
@@ -66,14 +100,12 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Academics',
       icon: '🎓',
       type: 'expandable',
-      expanded: expandedSections.academics,
       children: [
         { id: 'course-content', label: 'Course Content Delivery' },
         { 
           id: 'course-registration', 
           label: 'Course Registration',
           type: 'expandable',
-          expanded: expandedSections['course-registration'],
           children: [
             { id: 'regular-courses', label: 'Regular Courses', type: 'single' },
             { id: 're-registration', label: 'Re-Registration', type: 'single' },
@@ -96,7 +128,6 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Requisitions',
       icon: '📋',
       type: 'expandable',
-      expanded: expandedSections.requisitions,
       children: [
         { id: 'certificate-request', label: 'Certificate Request' },
         { id: 'transcript-duplicate', label: 'Transcript / Duplicate / Name Change' },
@@ -108,7 +139,6 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Print Forms',
       icon: '🖨️',
       type: 'expandable',
-      expanded: expandedSections['print-forms'],
       children: [
         { id: 'no-dues', label: 'No Dues' },
         { id: 'tc-form', label: 'TC Form' }
@@ -125,7 +155,6 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Payments',
       icon: '💳',
       type: 'expandable',
-      expanded: expandedSections.payments,
       children: [
         { id: 'online-fees-payment', label: 'Online Fees Payment' },
         { id: 'online-fees-payment-ccav', label: 'Online Fees Payment CCAV' },
@@ -143,7 +172,6 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Uploads',
       icon: '📤',
       type: 'expandable',
-      expanded: expandedSections.uploads,
       children: [
         { id: 'upload-cvc', label: 'Upload CVC Certificate' },
         { id: 'aat-tech-talk', label: 'AAT (Tech Talk)' },
@@ -164,7 +192,6 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       label: 'Feedback',
       icon: '💬',
       type: 'expandable',
-      expanded: expandedSections.feedback,
       children: [
         { id: 'early-semester-feedback', label: 'Early Semester Feedback' },
         { id: 'obe-feedback', label: 'OBE Feedback' },
@@ -203,19 +230,25 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
   return (
     <div 
       className={`sidebar ${isHovered ? 'sidebar-expanded' : 'sidebar-collapsed'}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        onHoverChange?.(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        onHoverChange?.(false);
+      }}
     >
       <div className="sidebar-header">
         <div className="logo">
           <span className="logo-icon">🏛️</span>
-          {isHovered && <span className="logo-text">IARE</span>}
+          {isHovered && <span className="logo-text">IARE Portal</span>}
         </div>
         {isHovered && (
           <div className="search-container">
             <input 
               type="text" 
-              placeholder="Search for menu.." 
+              placeholder="Search menu..." 
               className="search-input"
             />
           </div>
@@ -238,13 +271,13 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
               <span className="menu-icon">{item.icon}</span>
               {isHovered && <span className="menu-label">{item.label}</span>}
               {item.type === 'expandable' && isHovered && (
-                <span className={`expand-icon ${item.expanded ? 'expanded' : ''}`}>
+                <span className={`expand-icon ${expandedSections[item.id] ? 'expanded' : ''}`}>
                   ▼
                 </span>
               )}
             </div>
             
-            {item.type === 'expandable' && item.expanded && item.children && isHovered && (
+            {item.type === 'expandable' && expandedSections[item.id] && item.children && isHovered && (
               <div className="submenu">
                 {item.children.map((child) => (
                   <div key={child.id} className="submenu-wrapper">
@@ -259,16 +292,16 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
                         }
                       }}
                     >
-                      <span className="submenu-icon">✓</span>
+                      <span className="submenu-icon">•</span>
                       <span className="submenu-label">{child.label}</span>
                       {child.type === 'expandable' && (
-                        <span className={`expand-icon ${child.expanded ? 'expanded' : ''}`}>
+                        <span className={`expand-icon ${expandedSections[child.id] ? 'expanded' : ''}`}>
                           ▼
                         </span>
                       )}
                     </div>
                     
-                    {child.type === 'expandable' && child.expanded && child.children && (
+                    {child.type === 'expandable' && expandedSections[child.id] && child.children && (
                       <div className="sub-submenu">
                         {child.children.map((subChild) => (
                           <div 
@@ -279,7 +312,7 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
                               onSectionChange(subChild.id);
                             }}
                           >
-                            <span className="sub-submenu-icon">•</span>
+                            <span className="sub-submenu-icon">→</span>
                             <span className="sub-submenu-label">{subChild.label}</span>
                           </div>
                         ))}
