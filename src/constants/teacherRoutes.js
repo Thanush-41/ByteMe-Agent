@@ -29,6 +29,7 @@ export const TEACHER_ROUTES = {
   QUESTION_PAPER: 'question-paper',
   LEAVE: 'leave',
   FACULTY_UPLOADS: 'faculty-uploads',
+  MATERIAL_UPLOADS: 'material-uploads',
   BIOMETRIC: 'biometric',
   SERVICE_REGISTER: 'service-register',
 
@@ -160,6 +161,7 @@ export const findRouteByKey = (key) => {
     'question-paper': { title: 'Question Paper & Scheme of Evaluation', description: 'Question paper creation and evaluation scheme management.' },
     'leave': { title: 'Leave', description: 'Faculty leave application and management system.' },
     'faculty-uploads': { title: 'Faculty Uploads', description: 'Upload and manage faculty documents and resources.' },
+    'material-uploads': { title: 'Upload Self Appraisal PPT', description: 'Upload self appraisal presentation in PDF format.' },
     'biometric': { title: 'Biometric', description: 'Biometric attendance and access management.' },
     'service-register': { title: 'Service Register', description: 'Faculty service record and register management.' },
     'edit-personal-details': { title: 'Edit Personal Details', description: 'Update and manage personal information and contact details.' },

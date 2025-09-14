@@ -24,6 +24,7 @@ import ScheduleOfInstructions from './academics/ScheduleOfInstructions';
 import LORRequest from './academics/LORRequest';
 import AttendingActivityEvents from './academics/AttendingActivityEvents';
 import LibraryBooksIssued from './academics/LibraryBooksIssued';
+import SEELabMarks from './academics/SEELabMarks';
 
 import AAT from './evaluations/AAT';
 import AATII from './evaluations/AATII';
@@ -35,6 +36,7 @@ import Reports from './administrative/Reports';
 import Leave from './administrative/Leave';
 
 import FacultyUploads from './uploads/FacultyUploads';
+import UploadSelfAppraisalPPT from './uploads/UploadSelfAppraisalPPT';
 import ServiceRegister from './service/ServiceRegister';
 
 const TeacherDashboard = ({ onLogout }) => {
@@ -173,6 +175,9 @@ const TeacherDashboard = ({ onLogout }) => {
         return <AATII />;
       case 'labs':
         return <Labs />;
+      case 'see-lab-marks':
+      case 'labs/see-lab-marks':
+        return <SEELabMarks />;
 
       // Administrative pages
       case 'payroll':
@@ -187,6 +192,8 @@ const TeacherDashboard = ({ onLogout }) => {
       // Upload and Service pages
       case 'faculty-uploads':
         return <FacultyUploads />;
+      case 'material-uploads':
+        return <UploadSelfAppraisalPPT />;
       case 'service-register':
         return <ServiceRegister />;
 
@@ -744,7 +751,10 @@ const TeacherDashboard = ({ onLogout }) => {
           </div>
         </div>
 
-        {renderContent()}
+        {/* Main Content Area */}
+        <div className="main-content-wrapper">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );

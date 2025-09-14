@@ -1,0 +1,340 @@
+/* Attendance Register Container */
+.attendance-register-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.page-header h1 {
+  color: #333;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.breadcrumb {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.breadcrumb span {
+  color: #007bff;
+}
+
+/* Attendance Register Content */
+.attendance-register-content {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Filter Section */
+.filter-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.filter-row {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  flex: 1;
+}
+
+.filter-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.filter-group select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.view-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  height: fit-content;
+}
+
+.view-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  justify-content: flex-start;
+}
+
+.print-btn {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.print-front {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.print-front:hover {
+  background-color: #e0a800;
+}
+
+.print-regular {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.print-regular:hover {
+  background-color: #e0a800;
+}
+
+.print-last {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.print-last:hover {
+  background-color: #e0a800;
+}
+
+/* Attendance Table Container */
+.attendance-table-container {
+  margin-top: 20px;
+}
+
+.table-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #007bff;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+/* Table Wrapper for Horizontal Scroll */
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+}
+
+/* Attendance Table */
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  min-width: 1200px; /* Ensure minimum width for horizontal scroll */
+}
+
+.attendance-table th,
+.attendance-table td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 8px 4px;
+  vertical-align: middle;
+}
+
+/* Fixed Header Columns */
+.fixed-header {
+  background-color: #6c757d;
+  color: white;
+  font-weight: 600;
+  position: sticky;
+  left: 0;
+  z-index: 10;
+}
+
+.attendance-table th:nth-child(1),
+.attendance-table td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 5;
+  min-width: 50px;
+}
+
+.attendance-table th:nth-child(2),
+.attendance-table td:nth-child(2) {
+  position: sticky;
+  left: 50px;
+  background-color: white;
+  z-index: 5;
+  min-width: 100px;
+}
+
+.attendance-table th:nth-child(3),
+.attendance-table td:nth-child(3) {
+  position: sticky;
+  left: 150px;
+  background-color: white;
+  z-index: 5;
+  min-width: 200px;
+  text-align: left;
+  padding-left: 8px;
+}
+
+/* Header styling for fixed columns */
+.attendance-table thead th:nth-child(1),
+.attendance-table thead th:nth-child(2),
+.attendance-table thead th:nth-child(3) {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Date Headers */
+.date-header {
+  background-color: #e9ecef;
+  font-weight: 600;
+  min-width: 35px;
+}
+
+.period-header {
+  background-color: #e9ecef;
+  font-weight: 600;
+  min-width: 35px;
+}
+
+.period-number {
+  background-color: #e9ecef;
+  font-weight: 600;
+  min-width: 35px;
+}
+
+/* Student Data Cells */
+.sno-cell {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+.roll-cell {
+  font-weight: 500;
+  background-color: #f8f9fa;
+}
+
+.name-cell {
+  font-weight: 500;
+  background-color: #f8f9fa;
+  text-align: left !important;
+}
+
+/* Attendance Cells */
+.attendance-cell {
+  font-weight: 600;
+  min-width: 35px;
+}
+
+.attendance-cell.present {
+  color: #333;
+  background-color: white;
+}
+
+.attendance-cell.absent {
+  color: #dc3545;
+  background-color: #fff5f5;
+  font-weight: 700;
+}
+
+/* Hover Effects */
+.attendance-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.attendance-table tbody tr:hover .sno-cell,
+.attendance-table tbody tr:hover .roll-cell,
+.attendance-table tbody tr:hover .name-cell {
+  background-color: #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .filter-group {
+    min-width: 100%;
+  }
+  
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+  
+  .attendance-table {
+    font-size: 11px;
+  }
+  
+  .attendance-table th,
+  .attendance-table td {
+    padding: 6px 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .attendance-register-container {
+    padding: 10px;
+  }
+  
+  .attendance-register-content {
+    padding: 15px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

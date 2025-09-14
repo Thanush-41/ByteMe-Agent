@@ -1,0 +1,301 @@
+/* Upload Self Appraisal PPT Container */
+.upload-appraisal-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.page-header h1 {
+  color: #333;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.breadcrumb {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.breadcrumb span {
+  color: #007bff;
+}
+
+/* Upload Appraisal Content */
+.upload-appraisal-content {
+  background: white;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Upload Section */
+.upload-section {
+  width: 100%;
+}
+
+.upload-header {
+  background-color: #17a2b8;
+  color: white;
+  padding: 15px 30px;
+  margin: 0;
+}
+
+.upload-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Upload Form */
+.upload-form {
+  padding: 30px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.field-value {
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* File Upload Section */
+.file-upload-section {
+  margin-bottom: 30px;
+}
+
+.file-group {
+  width: 100%;
+}
+
+.file-input-container {
+  width: 100%;
+}
+
+.file-input-display {
+  display: flex;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.file-name-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #6c757d;
+  background-color: white;
+}
+
+.file-name-input::placeholder {
+  color: #adb5bd;
+}
+
+.browse-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-left: 1px solid #ddd;
+}
+
+.browse-btn:hover {
+  background-color: #5a6268;
+}
+
+/* Upload Actions */
+.upload-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.upload-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.upload-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.upload-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Page Footer */
+.page-footer {
+  margin-top: 40px;
+  padding: 20px;
+  text-align: center;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.page-footer p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .upload-appraisal-container {
+    padding: 10px;
+  }
+
+  .upload-form {
+    padding: 20px;
+  }
+
+  .upload-header {
+    padding: 15px 20px;
+  }
+
+  .upload-header h2 {
+    font-size: 14px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .file-input-display {
+    flex-direction: column;
+  }
+
+  .browse-btn {
+    border-left: none;
+    border-top: 1px solid #ddd;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-btn {
+    width: 100%;
+  }
+
+  .upload-header h2 {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .field-value {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .file-name-input {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .browse-btn {
+    font-size: 13px;
+    padding: 10px 15px;
+  }
+}
+
+/* Focus states for accessibility */
+.file-name-input:focus,
+.browse-btn:focus,
+.upload-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* File validation styling */
+.file-input-container.error .file-input-display {
+  border-color: #dc3545;
+}
+
+.file-input-container.success .file-input-display {
+  border-color: #28a745;
+}
+
+/* Loading state for upload button */
+.upload-btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.upload-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
