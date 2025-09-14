@@ -357,6 +357,9 @@ const ChatBox = () => {
     e.preventDefault();
     if (!inputText.trim()) return;
 
+    // Auto-expand chatbox on first message
+    if (!isExpanded) setIsExpanded(true);
+
     const currentInput = inputText.trim();
 
     const newMessage = {
@@ -596,26 +599,7 @@ const ChatBox = () => {
       {/* Expanded Chat Messages - only show when expanded */}
       {isExpanded && (
         <div className="chat-messages-container">
-          {/* Debug Section - only show when expanded */}
-          {isExpanded && (
-            <div className="debug-section">
-              <button onClick={testEZilSQLConnection} className="debug-button" disabled={isTyping}>
-                🔧 Test EZilSQL Connection
-              </button>
-              <button onClick={resetConversation} className="debug-button" disabled={isTyping}>
-                🔄 Reset Conversation
-              </button>
-              <button onClick={testNavigationResponse} className="debug-button" disabled={isTyping}>
-                🧪 Test Navigation
-              </button>
-              <button onClick={testInternalNavigation} className="debug-button" disabled={isTyping}>
-                🎯 Test Internal Navigation
-              </button>
-              <button onClick={showAPIStatus} className="debug-button" disabled={isTyping}>
-                📊 API Status
-              </button>
-            </div>
-          )}
+          {/* Debug buttons removed as requested */}
 
           <div className="chatbox-messages">
             {messages.map((message) => (
