@@ -1,0 +1,10 @@
+This is a test file created to verify git push to ByteMe repository.
+
+Features implemented in this project:
+- ChatBox with draggable functionality
+- User messages on right, bot messages on left
+- Automatic navigation for direct commands
+- Plus icon for new chat (clear chat)
+- Enhanced UI and responsive design
+
+Created on: September 15, 2025
