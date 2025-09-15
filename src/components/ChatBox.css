@@ -619,32 +619,53 @@
 /* Message Styling */
 .message {
   display: flex;
-  gap: 8px;
   max-width: 100%;
   animation: messageSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.3s ease;
+  margin-bottom: 12px;
+  padding: 0 8px;
 }
 
 .message:hover {
   transform: translateY(-1px);
 }
 
-.user-message {
+/* User messages on the right */
+.message.user {
   justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 0;
 }
 
-.user-message .message-content {
+.message.user .message-avatar {
+  order: 2;
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+.message.user .message-content {
+  order: 1;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
   border-radius: 18px 18px 4px 18px;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.bot-message {
+/* Bot messages on the left */
+.message.bot {
   justify-content: flex-start;
+  margin-left: 0;
+  margin-right: auto;
 }
 
-.bot-message .message-content {
+.message.bot .message-avatar {
+  order: 1;
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+.message.bot .message-content {
+  order: 2;
   background: rgba(255, 255, 255, 0.9);
   color: #374151;
   border-radius: 18px 18px 18px 4px;
@@ -654,7 +675,6 @@
 .message-avatar {
   width: 28px;
   height: 28px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -662,13 +682,31 @@
   color: white;
   flex-shrink: 0;
   margin-top: 2px;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
   transition: all 0.3s ease;
+}
+
+/* Bot avatar styling */
+.message.bot .message-avatar {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* User avatar styling */
+.message.user .message-avatar {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .message:hover .message-avatar {
   transform: scale(1.1);
+}
+
+.message.bot:hover .message-avatar {
   box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.message.user:hover .message-avatar {
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 .message-content {
@@ -710,7 +748,7 @@
   text-align: right;
 }
 
-.user-message .message-timestamp {
+.message.user .message-timestamp {
   text-align: left;
 }
 

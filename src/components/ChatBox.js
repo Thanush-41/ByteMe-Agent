@@ -627,7 +627,7 @@ const ChatBox = () => {
         >
           <div className="chat-header">
             <div className="header-content">
-              <h3>EZil Samvidha AI Assistant</h3>
+              <h3>EZil Agent</h3>
               <div className="connection-status">
                 <span className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}></span>
                 <span className="status-text">{isConnected ? 'Connected' : 'Disconnected'}</span>
@@ -708,14 +708,14 @@ const ChatBox = () => {
                             padding: '8px 16px', 
                             border: 'none', 
                             borderRadius: '6px', 
-                            backgroundColor: '#3b82f6', 
+                            backgroundColor: '#000', 
                             color: 'white', 
                             fontSize: '13px',
                             cursor: 'pointer',
                             boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                           }}
                         >
-                          📱 Open {message.navigationLabel}
+                          {message.navigationLabel}
                         </button>
                       ) : (
                         // Show confirmation buttons (Yes/No)

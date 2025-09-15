@@ -93,8 +93,8 @@ class ChatbotIntelligence {
     },
     
     navigation: {
-      keywords: ['open', 'go to', 'show', 'navigate', 'take me to'],
-      queries: ['open attendance', 'go to results', 'show timetable'],
+      keywords: ['open', 'go to', 'show', 'navigate', 'take me to', 'redirect', 'visit'],
+      queries: ['open attendance', 'go to results', 'show timetable', 'go to attendence page', 'take me to attendance'],
       responses: {
         general: 'I\'ll navigate you to the requested page.',
         specific: 'Opening the page for you.'
@@ -122,22 +122,33 @@ class ChatbotIntelligence {
     'show attendance': 'my attendance',
     'check attendance': 'my attendance',
     'attendance report': 'my attendance',
+    'go to attendance': 'open attendance',
+    'go to attendence': 'open attendance',
+    'go to attendence page': 'open attendance',
+    'open attendence': 'open attendance',
+    'take me to attendance': 'open attendance',
     
     'whats my result': 'my results',
     'what are my marks': 'my results',
     'show results': 'my results',
     'check results': 'my results',
     'my exam results': 'my results',
+    'go to results': 'open results',
+    'open results': 'open results',
     
     'whats my schedule': 'my timetable',
     'what is my timetable': 'my timetable',
     'show timetable': 'my timetable',
     'class timings': 'my timetable',
     'todays schedule': 'my timetable',
+    'go to timetable': 'open timetable',
+    'open timetable': 'open timetable',
     
     'show cia marks': 'my cia marks',
     'internal marks': 'my cia marks',
-    'cia assessment': 'my cia marks'
+    'cia assessment': 'my cia marks',
+    'go to cia marks': 'open cia marks',
+    'open cia marks': 'open cia marks'
   };
 
   /**
@@ -158,7 +169,8 @@ class ChatbotIntelligence {
         matchType: 'direct',
         originalQuery: query,
         normalizedQuery: normalizedQuery,
-        suggestedActions: directMatch.actions
+        suggestedActions: directMatch.actions,
+        targetIntent: directMatch.targetIntent
       };
     }
     
@@ -264,11 +276,32 @@ class ChatbotIntelligence {
    * Find direct matches in query patterns
    */
   static findDirectMatch(queryLower) {
+    // First check for navigation patterns
+    const navigationKeywords = ['open', 'go to', 'navigate', 'take me to', 'redirect', 'visit'];
+    const hasNavigationKeyword = navigationKeywords.some(keyword => queryLower.includes(keyword));
+    
+    if (hasNavigationKeyword) {
+      // Check which page they want to navigate to
+      for (const [intent, pattern] of Object.entries(this.intentPatterns)) {
+        if (intent === 'navigation') continue; // Skip navigation intent itself
+        
+        const hasTargetKeyword = pattern.keywords.some(keyword => queryLower.includes(keyword));
+        if (hasTargetKeyword) {
+          return { intent: 'navigation', actions: pattern.actions, targetIntent: intent };
+        }
+      }
+      
+      // If navigation keyword found but no specific target, return navigation intent
+      return { intent: 'navigation', actions: [] };
+    }
+    
+    // Check for direct query matches
     for (const [intent, pattern] of Object.entries(this.intentPatterns)) {
       if (pattern.queries.some(q => queryLower.includes(q))) {
         return { intent, actions: pattern.actions };
       }
     }
+    
     return null;
   }
 
@@ -467,28 +500,42 @@ class ChatbotIntelligence {
   static generateNavigationResponse(analysis) {
     const query = analysis.normalizedQuery;
     let targetAction = null;
+    let targetLabel = null;
     
-    // Extract target page from navigation query
-    for (const [intent, pattern] of Object.entries(this.intentPatterns)) {
-      if (pattern.keywords.some(keyword => query.includes(keyword))) {
-        targetAction = pattern.actions[0];
-        break;
+    // If we have a target intent from direct match, use its actions
+    if (analysis.suggestedActions && analysis.suggestedActions.length > 0) {
+      targetAction = analysis.suggestedActions[0];
+      targetLabel = targetAction.replace('-', ' ');
+    } else {
+      // Extract target page from navigation query
+      for (const [intent, pattern] of Object.entries(this.intentPatterns)) {
+        if (intent === 'navigation') continue;
+        
+        if (pattern.keywords.some(keyword => query.includes(keyword))) {
+          targetAction = pattern.actions[0];
+          targetLabel = targetAction.replace('-', ' ');
+          break;
+        }
       }
     }
     
     if (targetAction) {
       return {
-        text: `🚀 Opening the ${targetAction.replace('-', ' ')} page for you...`,
+        text: `🚀 Opening the ${targetLabel} page for you...`,
         hasData: false,
         navigation: {
           immediate: true,
           action: targetAction,
-          label: `Open ${targetAction.replace('-', ' ')} Page`
+          label: `${targetLabel} Page`
         }
       };
     }
     
-    return this.generateUnknownResponse(analysis);
+    return {
+      text: `I understand you want to navigate somewhere, but I'm not sure which page you're looking for. 🤔\n\nI can take you to:\n• Attendance\n• Exam Results\n• Timetable\n• CIA Marks\n• Course Registration\n• Project Details\n\nTry saying "go to attendance" or "open timetable"`,
+      hasData: false,
+      navigation: null
+    };
   }
 
   static generateUnknownResponse(analysis) {
