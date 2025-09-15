@@ -13,7 +13,6 @@ const ChatBox = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isConnected, setIsConnected] = useState(true);
-  const [showDebug, setShowDebug] = useState(false);
   const [portalData, setPortalData] = useState(null);
   const [chatboxHeight, setChatboxHeight] = useState(300); // Dynamic height state
   
@@ -154,18 +153,16 @@ const ChatBox = () => {
         const actualContentHeight = messagesContainerRef.current.scrollHeight;
         const headerHeight = 60; // Chat header
         const inputAreaHeight = 60; // Input area
-        const debugPanelHeight = showDebug ? 80 : 0;
         const padding = 32; // Additional padding
         
-        contentHeight = actualContentHeight + headerHeight + inputAreaHeight + debugPanelHeight + padding;
+        contentHeight = actualContentHeight + headerHeight + inputAreaHeight + padding;
       } else {
         // Fallback calculation based on message count
         const estimatedMessageHeight = 80; // Average height per message in pixels
         const headerHeight = 60; 
         const inputAreaHeight = 60; 
-        const debugPanelHeight = showDebug ? 80 : 0;
         
-        contentHeight = (messages.length * estimatedMessageHeight) + headerHeight + inputAreaHeight + debugPanelHeight + 50;
+        contentHeight = (messages.length * estimatedMessageHeight) + headerHeight + inputAreaHeight + 50;
       }
       
       // Use the smaller of content height or max allowed height, with minimum height
@@ -188,7 +185,7 @@ const ChatBox = () => {
       clearTimeout(timer);
       window.removeEventListener('resize', handleResize);
     };
-  }, [messages, isExpanded, showDebug]);
+  }, [messages, isExpanded]);
 
   // Handle navigation confirmation response
   const handleNavigationConfirm = (action, navigationAction, navigationLabel) => {
@@ -548,72 +545,6 @@ const ChatBox = () => {
     }
   };
 
-  const testEZilSQLConnection = async () => {
-    setIsTyping(true);
-    console.log('🚀 Testing EZilSQL API connection...');
-    
-    try {
-      const result = await testConnection();
-      
-      const message = {
-        id: Date.now(),
-        text: result.success 
-          ? `🎉 EZilSQL API Connection SUCCESS!\n✅ Endpoint: ${process.env.REACT_APP_EZILSQL_API_URL}\n✅ Response: ${result.response.substring(0, 100)}${result.response.length > 100 ? '...' : ''}\n✅ Conversation ID: ${result.conversationId || 'New conversation'}`
-          : `❌ EZilSQL API connection failed.\nError: ${result.error}\nEndpoint: ${process.env.REACT_APP_EZILSQL_API_URL}`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, message]);
-      setIsConnected(result.success);
-    } catch (error) {
-      const errorMessage = {
-        id: Date.now(),
-        text: `❌ EZilSQL API Test Error: ${error.message}`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-      setIsConnected(false);
-    }
-    
-    setIsTyping(false);
-  };
-
-  const resetConversation = async () => {
-    setIsTyping(true);
-    console.log('🔄 Resetting EZilSQL conversation...');
-    
-    try {
-      const result = await EZilSQLService.resetConversation();
-      
-      const message = {
-        id: Date.now(),
-        text: result.success 
-          ? `🔄 Conversation reset successfully!\n✅ New conversation ID: ${result.conversationId}`
-          : `❌ Failed to reset conversation.\nError: ${result.error}`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, message]);
-      
-      if (result.success) {
-        setIsConnected(true);
-      }
-    } catch (error) {
-      const errorMessage = {
-        id: Date.now(),
-        text: `❌ Reset Error: ${error.message}`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    }
-    
-    setIsTyping(false);
-  };
-
   return (
     <div className={`chatbox-container ${isExpanded ? 'expanded' : ''}`}>
       {/* Expanded Chat Window */}
@@ -635,11 +566,13 @@ const ChatBox = () => {
             </div>
             <div className="header-buttons">
               <button 
-                onClick={() => setShowDebug(!showDebug)}
-                className="debug-button"
-                title="Toggle Debug Options"
+                onClick={() => setMessages([])}
+                className="new-chat-button"
+                title="New Chat (Clear Messages)"
               >
-                ⚙️
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
               </button>
               <button onClick={toggleChat} className="close-button" aria-label="Close chat">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -648,24 +581,6 @@ const ChatBox = () => {
               </button>
             </div>
           </div>
-
-          {/* Debug Panel */}
-          {showDebug && (
-            <div className="debug-panel">
-              <h4>Debug Options</h4>
-              <div className="debug-buttons">
-                <button onClick={testEZilSQLConnection} className="debug-btn">
-                  Test Connection
-                </button>
-                <button onClick={resetConversation} className="debug-btn">
-                  Reset Conversation
-                </button>
-                <button onClick={() => setMessages([])} className="debug-btn">
-                  Clear Chat
-                </button>
-              </div>
-            </div>
-          )}
 
           <div 
             className="messages-container" 
@@ -708,7 +623,7 @@ const ChatBox = () => {
                             padding: '8px 16px', 
                             border: 'none', 
                             borderRadius: '6px', 
-                            backgroundColor: '#000', 
+                            backgroundColor: '#3b82f6', 
                             color: 'white', 
                             fontSize: '13px',
                             cursor: 'pointer',
@@ -728,7 +643,7 @@ const ChatBox = () => {
                               marginRight: '8px', 
                               border: 'none', 
                               borderRadius: '4px', 
-                              backgroundColor: '#3b82f6', 
+                              backgroundColor: '#000', 
                               color: 'white', 
                               fontSize: '12px',
                               cursor: 'pointer'
