@@ -15,9 +15,11 @@ const ChatBox = () => {
   const [isConnected, setIsConnected] = useState(true);
   const [showDebug, setShowDebug] = useState(false);
   const [portalData, setPortalData] = useState(null);
+  const [chatboxHeight, setChatboxHeight] = useState(300); // Dynamic height state
   
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   const { currentUser } = useAuth();
   const navigate = useNavigate(); // React Router hook for navigation
@@ -128,6 +130,65 @@ const ChatBox = () => {
       inputRef.current.focus();
     }
   }, [isExpanded]);
+
+  // Dynamic height calculation based on messages and screen size
+  useEffect(() => {
+    const calculateOptimalHeight = () => {
+      if (!isExpanded || messages.length === 0) return;
+
+      // Get viewport height
+      const viewportHeight = window.innerHeight;
+      
+      // Calculate maximum allowed height (viewport height - 2rem from top - bottom margins)
+      const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const maxAllowedHeight = viewportHeight - (2 * remInPixels) - 120; // 120px for bottom margin and chatbox toggle button
+      
+      // Calculate minimum height
+      const minHeight = 350;
+      
+      // Calculate content-based height
+      let contentHeight = minHeight;
+      
+      if (messagesContainerRef.current) {
+        // Get actual content height from the messages container
+        const actualContentHeight = messagesContainerRef.current.scrollHeight;
+        const headerHeight = 60; // Chat header
+        const inputAreaHeight = 60; // Input area
+        const debugPanelHeight = showDebug ? 80 : 0;
+        const padding = 32; // Additional padding
+        
+        contentHeight = actualContentHeight + headerHeight + inputAreaHeight + debugPanelHeight + padding;
+      } else {
+        // Fallback calculation based on message count
+        const estimatedMessageHeight = 80; // Average height per message in pixels
+        const headerHeight = 60; 
+        const inputAreaHeight = 60; 
+        const debugPanelHeight = showDebug ? 80 : 0;
+        
+        contentHeight = (messages.length * estimatedMessageHeight) + headerHeight + inputAreaHeight + debugPanelHeight + 50;
+      }
+      
+      // Use the smaller of content height or max allowed height, with minimum height
+      const optimalHeight = Math.max(minHeight, Math.min(contentHeight, maxAllowedHeight));
+      
+      setChatboxHeight(optimalHeight);
+    };
+
+    // Use setTimeout to ensure DOM is updated before calculating
+    const timer = setTimeout(calculateOptimalHeight, 100);
+    
+    // Recalculate on window resize
+    const handleResize = () => {
+      setTimeout(calculateOptimalHeight, 100);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [messages, isExpanded, showDebug]);
 
   // Handle navigation confirmation response
   const handleNavigationConfirm = (action, navigationAction, navigationLabel) => {
@@ -557,7 +618,13 @@ const ChatBox = () => {
     <div className={`chatbox-container ${isExpanded ? 'expanded' : ''}`}>
       {/* Expanded Chat Window */}
       {isExpanded && (
-        <div className="chat-window">
+        <div 
+          className="chat-window"
+          style={{
+            height: `${chatboxHeight}px`,
+            maxHeight: `calc(100vh - 2rem)`
+          }}
+        >
           <div className="chat-header">
             <div className="header-content">
               <h3>EZil Samvidha AI Assistant</h3>
@@ -600,7 +667,14 @@ const ChatBox = () => {
             </div>
           )}
 
-          <div className="messages-container">
+          <div 
+            className="messages-container" 
+            ref={messagesContainerRef}
+            style={{ 
+              maxHeight: `${chatboxHeight - 120}px`, // Subtract header and input area heights
+              height: 'auto'
+            }}
+          >
             {messages.map((message, index) => (
               <div key={message.id} className={`message ${message.sender}`}>
                 <div className="message-avatar">
