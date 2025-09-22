@@ -196,6 +196,15 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 10;
+}
+
+/* When expanded, change the input bar border radius */
+.chatbox-container.expanded .chat-input-bar {
+  border-radius: 6px 6px 20px 20px;
+  border-top: none;
+  margin-top: -1px;
 }
 
 .chat-input-bar:hover {
@@ -382,9 +391,15 @@
 
 /* Chat Window Styles */
 .chat-window {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  height: 650px;
+  max-height: calc(100vh - 140px);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(15px);
-  border-radius: 16px 16px 0 0;
+  border-radius: 16px 16px 6px 6px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: none;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
@@ -393,6 +408,46 @@
   overflow: hidden;
   animation: chatboxExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Top Middle Collapse Button */
+.chat-collapse-button {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  width: 32px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 15;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-collapse-button:hover {
+  background: rgba(248, 249, 250, 0.98);
+  transform: translateX(-50%) translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.chat-collapse-button svg {
+  width: 12px;
+  height: 12px;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.chat-collapse-button:hover svg {
+  color: #374151;
+  transform: scale(1.1);
 }
 
 .chat-header {
@@ -465,7 +520,7 @@
   flex: 1;
   min-height: 200px;
   scroll-behavior: smooth;
-  /* max-height will be set dynamically via inline styles */
+  /* Remove max-height to allow flex to control sizing */
 }
 
 /* Enhanced Scrollbar */
@@ -762,8 +817,12 @@
     width: 320px;
   }
   
+  .chat-toggle {
+    right: 15px !important;
+    bottom: 20px !important;
+  }
+  
   .messages-container {
-    /* Remove fixed max-height to allow dynamic sizing */
     padding: 12px;
   }
   
@@ -791,6 +850,11 @@
     max-width: 300px;
   }
   
+  .chat-toggle {
+    right: 10px !important;
+    bottom: 15px !important;
+  }
+  
   .chat-input-bar {
     margin: 0;
     padding: 8px;
@@ -807,7 +871,6 @@
   }
   
   .messages-container {
-    /* Remove fixed max-height to allow dynamic sizing */
     padding: 8px;
   }
   
@@ -831,6 +894,11 @@
     max-width: 280px;
   }
   
+  .chat-toggle {
+    right: 8px !important;
+    bottom: 12px !important;
+  }
+  
   .chat-header {
     padding: 8px 10px;
   }
@@ -845,6 +913,97 @@
   
   .message-text {
     font-size: 11px;
+  }
+}
+
+/* Chat Toggle Button - Main Floating Button */
+.chat-toggle {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001 !important;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chat-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.chat-toggle:hover::before {
+  opacity: 1;
+}
+
+.chat-toggle:active {
+  transform: translateY(0px);
+}
+
+.chat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.chat-toggle:hover .chat-icon {
+  transform: scale(1.05);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  border: 2px solid white;
+  animation: subtlePulse 3s infinite;
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
   }
 }
 

@@ -2,7 +2,7 @@
 export const EZILSQL_CONFIG = {
   // Use proxy URL for development to avoid CORS issues
   API_URL: process.env.NODE_ENV === 'development' 
-    ? '/api/chat'  // Use proxy route
+    ? '/api/chat'  // Use proxy route in development
     : (process.env.REACT_APP_EZILSQL_API_URL || 'https://ezilsql.azurewebsites.net/chat'),
   API_KEY: process.env.REACT_APP_EZILSQL_API_KEY || '',
 };
@@ -13,8 +13,14 @@ export class EZilSQLService {
 
   static async sendMessage(message, conversationHistory = []) {
     try {
+      console.log('🚀 ========== EZILSQL API CALL START ==========');
       console.log('🚀 Using EZilSQL API...');
-      console.log('Endpoint:', EZILSQL_CONFIG.API_URL);
+      console.log('🔗 Endpoint:', EZILSQL_CONFIG.API_URL);
+      console.log('🌍 Environment:', process.env.NODE_ENV);
+      console.log('📍 Using Proxy:', process.env.NODE_ENV === 'development' ? 'YES' : 'NO');
+      console.log('🔑 API Key Available:', !!EZILSQL_CONFIG.API_KEY);
+      console.log('📝 Message:', message);
+      console.log('📚 Conversation History Items:', conversationHistory.length);
       
       // Prepare request body
       const requestBody = {
@@ -24,9 +30,13 @@ export class EZilSQLService {
       // Include conversation_id if we have one
       if (this.conversationId) {
         requestBody.conversation_id = this.conversationId;
+        console.log('🆔 Including Conversation ID:', this.conversationId);
+      } else {
+        console.log('🆔 No existing conversation ID');
       }
 
-      console.log('📤 Request body:', requestBody);
+      console.log('📤 Full Request Body:', JSON.stringify(requestBody, null, 2));
+      console.log('📡 Making HTTP POST request...');
 
       const response = await fetch(EZILSQL_CONFIG.API_URL, {
         method: 'POST',
@@ -37,9 +47,16 @@ export class EZilSQLService {
         body: JSON.stringify(requestBody),
       });
 
+      console.log('📡 HTTP Response Status:', response.status);
+      console.log('📡 HTTP Response OK:', response.ok);
+      console.log('📡 HTTP Response Headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('EZilSQL API Error:', response.status, errorText);
+        console.error('❌ EZilSQL API Error Details:');
+        console.error('❌ Status:', response.status);
+        console.error('❌ Status Text:', response.statusText);
+        console.error('❌ Error Response:', errorText);
         
         // Handle specific error cases
         if (response.status === 401) {
@@ -56,25 +73,37 @@ export class EZilSQLService {
       }
 
       const data = await response.json();
-      console.log('📥 Response data:', data);
+      console.log('✅ ========== EZILSQL API SUCCESS ==========');
+      console.log('📥 Raw Response Data:', data);
+      console.log('📝 Response Message:', data.response);
+      console.log('🆔 Conversation ID:', data.conversation_id);
+      console.log('📊 Message Count:', data.message_count);
+      console.log('🔗 Portal URL:', data.portal_url);
 
       // Store conversation ID for future requests
       if (data.conversation_id) {
         this.conversationId = data.conversation_id;
-        console.log('💾 Stored conversation ID:', this.conversationId);
+        console.log('💾 Stored conversation ID for future use:', this.conversationId);
       }
 
       // Return both the response and any portal navigation data
-      return {
+      const result = {
         response: data.response || 'Sorry, I could not process your request at the moment.',
         conversationId: data.conversation_id,
         messageCount: data.message_count,
         portalUrl: data.portal_url || null, // For automatic navigation
         isPortalNavigation: !!data.portal_url
       };
+      
+      console.log('📦 Final Result Object:', result);
+      console.log('🚀 ========== EZILSQL API CALL END ==========');
+      return result;
 
     } catch (error) {
-      console.error('EZilSQL Service Error:', error);
+      console.error('❌ ========== EZILSQL API ERROR ==========');
+      console.error('❌ EZilSQL Service Error:', error);
+      console.error('❌ Error Message:', error.message);
+      console.error('❌ Error Stack:', error.stack);
       
       let errorMessage = 'I apologize, but I\'m experiencing technical difficulties. Please try again later.';
       
