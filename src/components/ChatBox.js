@@ -8,6 +8,7 @@ const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showFullChat, setShowFullChat] = useState(false); // New state for full chat window
   const [isTyping, setIsTyping] = useState(false);
   const [isConnected, setIsConnected] = useState(true);
   const [chatboxHeight] = useState(500); // Fixed: removed unused setter
@@ -75,6 +76,11 @@ const ChatBox = () => {
     setInputText('');
     setIsTyping(true);
 
+    // After first message, show full chat window
+    if (!showFullChat) {
+      setShowFullChat(true);
+    }
+
     try {
       console.log('🚀 ========== SENDING TO EZILSQL API ==========');
       console.log('📝 User Input:', currentInput);
@@ -134,7 +140,26 @@ const ChatBox = () => {
   };
 
   const toggleChat = () => {
-    setIsExpanded(!isExpanded);
+    if (!isExpanded) {
+      // First click: expand to show input only
+      setIsExpanded(true);
+    } else if (!showFullChat) {
+      // If input is shown but no messages yet, collapse back to button
+      setIsExpanded(false);
+    } else {
+      // If full chat is shown, toggle the full chat visibility
+      setShowFullChat(!showFullChat);
+    }
+  };
+
+  const toggleFullChat = () => {
+    // Specifically for arrow button - toggle full chat window
+    if (messages.length > 0) {
+      setShowFullChat(!showFullChat);
+    } else {
+      // If no messages, just collapse to button
+      setIsExpanded(false);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -147,143 +172,151 @@ const ChatBox = () => {
   return (
     <div className={`chatbox-container ${isExpanded ? 'expanded' : ''}`}>
       {isExpanded && (
-        <div 
-          className="chat-window"
-          style={{
-            height: `${chatboxHeight}px`,
-            maxHeight: `calc(100vh - 2rem)`
-          }}
-        >
-          <div className="chat-header">
-            <div className="header-content">
-              <h3>EZil Agent</h3>
-              <div className="connection-status">
-                <span className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}></span>
-                <span className="status-text">{isConnected ? 'Connected' : 'Disconnected'}</span>
-              </div>
-            </div>
-            <div className="header-buttons">
-              <button 
-                onClick={() => setMessages([])}
-                className="new-chat-button"
-                title="New Chat (Clear Messages)"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </button>
-              <button onClick={toggleChat} className="close-button" aria-label="Close chat">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div 
-            className="messages-container" 
-            ref={messagesContainerRef}
-            style={{ 
-              maxHeight: `${chatboxHeight - 150}px`,
-              height: 'auto'
-            }}
-          >
-            {messages.map((message) => (
-              <div key={message.id} className={`message ${message.sender}`}>
-                <div className="message-avatar">
-                  {message.sender === 'bot' ? (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="3" fill="currentColor"/>
-                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" strokeWidth="2"/>
-                    </svg>
-                  ) : (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                    </svg>
-                  )}
-                </div>
-                <div className="message-content">
-                  <div className="message-text">
-                    {message.text.split('\n').map((line, i) => (
-                      <span key={i}>
-                        {line}
-                        {i < message.text.split('\n').length - 1 && <br />}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="message-time">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {isTyping && (
-              <div className="message bot">
-                <div className="message-avatar">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="3" fill="currentColor"/>
-                  </svg>
-                </div>
-                <div className="message-content">
-                  <div className="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <form onSubmit={handleSendMessage} className="input-form">
-            <div className="input-wrapper">
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={isConnected ? "Ask me anything..." : "Connection issues - please try again..."}
-                className="chat-input"
-                disabled={isTyping}
-              />
-              <button 
-                type="button" 
-                onClick={toggleChat} 
-                className="expand-button"
-                aria-label="Collapse chat"
-              >
-                <svg 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none"
-                  className="expand-arrow expanded"
+        <>
+          {/* Input Bar - Always shown when expanded */}
+          <div className="chat-input-bar">
+            <form onSubmit={handleSendMessage} className="input-form">
+              <div className="input-wrapper">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={isConnected ? "Ask me anything..." : "Connection issues - please try again..."}
+                  className="chat-input"
+                  disabled={isTyping}
+                />
+                <button 
+                  type="button" 
+                  onClick={toggleFullChat} 
+                  className="expand-button"
+                  aria-label={showFullChat ? "Collapse chat" : (messages.length > 0 ? "Expand chat" : "Close input")}
                 >
-                  <path 
-                    d="M7 14l5-5 5 5" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-              <button 
-                type="submit" 
-                className="send-button"
-                disabled={isTyping || !inputText.trim()}
-                aria-label="Send message"
+                  <svg 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none"
+                    className={`expand-arrow ${showFullChat ? 'expanded' : ''}`}
+                  >
+                    <path 
+                      d="M7 14l5-5 5 5" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+                <button 
+                  type="submit" 
+                  className="send-button"
+                  disabled={isTyping || !inputText.trim()}
+                  aria-label="Send message"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Full Chat Window - Only shown after first message */}
+          {showFullChat && (
+            <div 
+              className="chat-window"
+              style={{
+                height: `${chatboxHeight}px`,
+                maxHeight: `calc(100vh - 2rem)`
+              }}
+            >
+              <div className="chat-header">
+                <div className="header-content">
+                  <h3>EZil Agent</h3>
+                  <div className="connection-status">
+                    <span className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}></span>
+                    <span className="status-text">{isConnected ? 'Connected' : 'Disconnected'}</span>
+                  </div>
+                </div>
+                <div className="header-buttons">
+                  <button 
+                    onClick={() => setMessages([])}
+                    className="new-chat-button"
+                    title="New Chat (Clear Messages)"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </button>
+                  <button onClick={toggleChat} className="close-button" aria-label="Toggle chat">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M7 14l5-5 5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div 
+                className="messages-container" 
+                ref={messagesContainerRef}
+                style={{ 
+                  maxHeight: `${chatboxHeight - 150}px`,
+                  height: 'auto'
+                }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+                {messages.map((message) => (
+                  <div key={message.id} className={`message ${message.sender}`}>
+                    <div className="message-avatar">
+                      {message.sender === 'bot' ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" strokeWidth="2"/>
+                        </svg>
+                      ) : (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div className="message-content">
+                      <div className="message-text">
+                        {message.text.split('\n').map((line, i) => (
+                          <span key={i}>
+                            {line}
+                            {i < message.text.split('\n').length - 1 && <br />}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="message-time">
+                        {message.timestamp.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: false })}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="message bot">
+                    <div className="message-avatar">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                      </svg>
+                    </div>
+                    <div className="message-content">
+                      <div className="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </form>
-        </div>
+          )}
+        </>
       )}
 
       {!isExpanded && (
