@@ -42,6 +42,18 @@ pids
 # dotenv environment variables file
 .env
 
+# Test files and scripts with potential sensitive data
+test_*.js
+test_*.py
+test-*.js
+comprehensive-azure-test.js
+final_test.py
+*_test.js
+*_test.py
+azure_auth_diagnostics.py
+discover_azure_structure.py
+find_deployment_endpoint.py
+
 # IDE
 .vscode/
 .idea/
