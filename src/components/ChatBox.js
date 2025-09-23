@@ -16,6 +16,157 @@ const ChatBox = () => {
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
+  // Helper function to balance braces in mathematical expressions
+  const balanceBraces = (text) => {
+    let depth = 0;
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (char === '{') depth++;
+      if (char === '}') depth--;
+      result += char;
+    }
+    // Add missing closing braces
+    while (depth > 0) {
+      result += '}';
+      depth--;
+    }
+    return result;
+  };
+
+  // Helper function to clean up nested mathematical expressions
+  const cleanMathExpression = (text) => {
+    return text
+      // Remove excessive whitespace in math
+      .replace(/\s+/g, ' ')
+      // Clean up double braces
+      .replace(/\{\{/g, '{').replace(/\}\}/g, '}')
+      // Fix common LaTeX formatting issues
+      .replace(/\s*\^\s*/g, '^').replace(/\s*_\s*/g, '_')
+      // Ensure proper spacing around operators
+      .replace(/([+\-=<>≤≥≠≈])(?!\s)/g, '$1 ')
+      .replace(/(?<!\s)([+\-=<>≤≥≠≈])/g, ' $1');
+  };
+
+  // Comprehensive function to render mathematical expressions and formatting
+  const renderMessageText = (text) => {
+    // Pre-process the text to handle edge cases
+    let processedText = balanceBraces(text);
+    
+    processedText = processedText
+      // Handle display math blocks \[...\] (multiline equations)
+      .replace(/\\?\\\[(.*?)\\?\\\]/gs, (match, content) => {
+        const cleanContent = cleanMathExpression(content);
+        return `<div class="math-display">${cleanContent}</div>`;
+      })
+      // Handle inline math expressions \(...\)
+      .replace(/\\?\\\((.*?)\\?\\\)/g, (match, content) => {
+        const cleanContent = cleanMathExpression(content);
+        return `<span class="math-inline">${cleanContent}</span>`;
+      })
+      
+      // Advanced Mathematical Expressions
+      // Handle fractions with nested expressions (improved regex)
+      .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, 
+        (match, num, den) => {
+          const cleanNum = cleanMathExpression(num);
+          const cleanDen = cleanMathExpression(den);
+          return `<span class="fraction"><span class="numerator">${cleanNum}</span><span class="fraction-line"></span><span class="denominator">${cleanDen}</span></span>`;
+        })
+      
+      // Handle square roots
+      .replace(/\\sqrt\{([^}]+)\}/g, '<span class="sqrt">√<span class="sqrt-content">$1</span></span>')
+      .replace(/\\sqrt\[([^\]]+)\]\{([^}]+)\}/g, '<span class="nth-root"><sup class="root-index">$1</sup>√<span class="sqrt-content">$2</span></span>')
+      
+      // Handle summations and integrals
+      .replace(/\\sum_\{([^}]+)\}\^\{([^}]+)\}/g, '<span class="summation">∑<sub class="sum-lower">$1</sub><sup class="sum-upper">$2</sup></span>')
+      .replace(/\\sum_\{([^}]+)\}/g, '<span class="summation">∑<sub class="sum-lower">$1</sub></span>')
+      .replace(/\\sum\^\{([^}]+)\}/g, '<span class="summation">∑<sup class="sum-upper">$1</sup></span>')
+      .replace(/\\prod_\{([^}]+)\}\^\{([^}]+)\}/g, '<span class="summation">∏<sub class="sum-lower">$1</sub><sup class="sum-upper">$2</sup></span>')
+      .replace(/\\int_\{([^}]+)\}\^\{([^}]+)\}/g, '<span class="integral">∫<sub class="int-lower">$1</sub><sup class="int-upper">$2</sup></span>')
+      .replace(/\\int/g, '<span class="integral">∫</span>')
+      
+      // Handle limits
+      .replace(/\\lim_\{([^}]+)\\to([^}]+)\}/g, '<span class="limit">lim<sub class="limit-sub">$1→$2</sub></span>')
+      .replace(/\\lim_\{([^}]+)\}/g, '<span class="limit">lim<sub class="limit-sub">$1</sub></span>')
+      
+      // Handle common functions
+      .replace(/\\sin/g, 'sin').replace(/\\cos/g, 'cos').replace(/\\tan/g, 'tan')
+      .replace(/\\sec/g, 'sec').replace(/\\csc/g, 'csc').replace(/\\cot/g, 'cot')
+      .replace(/\\log/g, 'log').replace(/\\ln/g, 'ln').replace(/\\exp/g, 'exp')
+      .replace(/\\arcsin/g, 'arcsin').replace(/\\arccos/g, 'arccos').replace(/\\arctan/g, 'arctan')
+      
+      // Handle superscripts and subscripts (enhanced for nested expressions)
+      .replace(/([a-zA-Z0-9()])\^(\{[^}]+\}|\{[^}]*\{[^}]*\}[^}]*\}|[^{\s]+)/g, '$1<sup>$2</sup>')
+      .replace(/([a-zA-Z0-9()])_(\{[^}]+\}|\{[^}]*\{[^}]*\}[^}]*\}|[^{\s]+)/g, '$1<sub>$2</sub>')
+      .replace(/\^(\{[^}]+\}|\{[^}]*\{[^}]*\}[^}]*\}|[^{\s]+)/g, '<sup>$1</sup>')
+      .replace(/_(\{[^}]+\}|\{[^}]*\{[^}]*\}[^}]*\}|[^{\s]+)/g, '<sub>$1</sub>')
+      
+      // Clean up braces in super/subscripts
+      .replace(/<(sup|sub)>\{([^}]+)\}<\/(sup|sub)>/g, '<$1>$2</$3>')
+      
+      // Handle text within math environments
+      .replace(/\\text\{([^}]+)\}/g, '<span class="math-text">$1</span>')
+      .replace(/\\mathrm\{([^}]+)\}/g, '<span class="math-text">$1</span>')
+      
+      // Mathematical symbols (comprehensive)
+      .replace(/\\times/g, '×').replace(/\\cdot/g, '⋅').replace(/\\div/g, '÷')
+      .replace(/\\pm/g, '±').replace(/\\mp/g, '∓')
+      .replace(/\\leq/g, '≤').replace(/\\geq/g, '≥').replace(/\\neq/g, '≠')
+      .replace(/\\approx/g, '≈').replace(/\\equiv/g, '≡').replace(/\\cong/g, '≅')
+      .replace(/\\propto/g, '∝').replace(/\\infty/g, '∞')
+      .replace(/\\partial/g, '∂').replace(/\\nabla/g, '∇')
+      .replace(/\\angle/g, '∠').replace(/\\perp/g, '⊥')
+      .replace(/\\parallel/g, '∥').replace(/\\subset/g, '⊂').replace(/\\supset/g, '⊃')
+      .replace(/\\in/g, '∈').replace(/\\notin/g, '∉').replace(/\\cup/g, '∪').replace(/\\cap/g, '∩')
+      
+      // Greek letters (comprehensive)
+      .replace(/\\alpha/g, 'α').replace(/\\beta/g, 'β').replace(/\\gamma/g, 'γ')
+      .replace(/\\delta/g, 'δ').replace(/\\epsilon/g, 'ε').replace(/\\varepsilon/g, 'ɛ')
+      .replace(/\\zeta/g, 'ζ').replace(/\\eta/g, 'η').replace(/\\theta/g, 'θ')
+      .replace(/\\vartheta/g, 'ϑ').replace(/\\iota/g, 'ι').replace(/\\kappa/g, 'κ')
+      .replace(/\\lambda/g, 'λ').replace(/\\mu/g, 'μ').replace(/\\nu/g, 'ν')
+      .replace(/\\xi/g, 'ξ').replace(/\\pi/g, 'π').replace(/\\varpi/g, 'ϖ')
+      .replace(/\\rho/g, 'ρ').replace(/\\varrho/g, 'ϱ').replace(/\\sigma/g, 'σ')
+      .replace(/\\varsigma/g, 'ς').replace(/\\tau/g, 'τ').replace(/\\upsilon/g, 'υ')
+      .replace(/\\phi/g, 'φ').replace(/\\varphi/g, 'ϕ').replace(/\\chi/g, 'χ')
+      .replace(/\\psi/g, 'ψ').replace(/\\omega/g, 'ω')
+      .replace(/\\Delta/g, 'Δ').replace(/\\Gamma/g, 'Γ').replace(/\\Lambda/g, 'Λ')
+      .replace(/\\Sigma/g, 'Σ').replace(/\\Phi/g, 'Φ').replace(/\\Psi/g, 'Ψ')
+      .replace(/\\Omega/g, 'Ω').replace(/\\Theta/g, 'Θ').replace(/\\Xi/g, 'Ξ')
+      .replace(/\\Pi/g, 'Π').replace(/\\Upsilon/g, 'Υ')
+      
+      // Handle common formatting
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/__(.*?)__/g, '<strong>$1</strong>')
+      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+      .replace(/_([^_]+)_/g, '<em>$1</em>')
+      
+      // Handle code formatting
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      
+      // Handle arrows and logical symbols
+      .replace(/\\rightarrow/g, '→').replace(/\\leftarrow/g, '←')
+      .replace(/\\uparrow/g, '↑').replace(/\\downarrow/g, '↓')
+      .replace(/\\leftrightarrow/g, '↔').replace(/\\updownarrow/g, '↕')
+      .replace(/\\Rightarrow/g, '⇒').replace(/\\Leftarrow/g, '⇐')
+      .replace(/\\Leftrightarrow/g, '⇔').replace(/\\Updownarrow/g, '⇕')
+      .replace(/\\iff/g, '⟺').replace(/\\implies/g, '⟹')
+      
+      // Handle special spacing and alignment
+      .replace(/\\\\/g, '<br/>')  // Line breaks in math
+      .replace(/\\quad/g, '&nbsp;&nbsp;&nbsp;&nbsp;')  // Quad space
+      .replace(/\\qquad/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')  // Double quad
+      .replace(/\\,/g, '&thinsp;')  // Thin space
+      .replace(/\\;/g, '&nbsp;')   // Medium space
+      
+      // Clean up remaining LaTeX delimiters
+      .replace(/\\\[/g, '').replace(/\\\]/g, '')
+      .replace(/\\\(/g, '').replace(/\\\)/g, '');
+
+    return processedText;
+  };
+
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
@@ -32,18 +183,40 @@ const ChatBox = () => {
     try {
       console.log('🧭 Navigating to portal URL:', url);
       
-      if (url.startsWith('/?action=')) {
-        const action = url.replace('/?action=', '');
-        console.log('🎯 Extracted action:', action);
-        navigate(`/?action=${action}`);
-        
-        const successMessage = {
-          id: Date.now(),
-          text: `🏠 Successfully navigated to **${title}**!`,
-          sender: 'bot',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, successMessage]);
+      // Clean the URL by removing extra spaces and normalizing
+      const cleanUrl = url.trim().replace(/\s+/g, '');
+      console.log('🧹 Cleaned URL:', cleanUrl);
+      
+      if (cleanUrl.startsWith('/?action=') || cleanUrl.includes('?action=')) {
+        // Extract action from the cleaned URL
+        const actionMatch = cleanUrl.match(/\?action=([^&]+)/);
+        if (actionMatch) {
+          const action = actionMatch[1];
+          console.log('🎯 Extracted action:', action);
+          
+          // Navigate to the URL
+          const navigationUrl = `/?action=${action}`;
+          console.log('🚀 Navigating to URL:', navigationUrl);
+          navigate(navigationUrl);
+          
+          // Add a small delay to check if navigation worked
+          setTimeout(() => {
+            console.log('🔍 Current window location after navigation:', window.location.href);
+            console.log('🔍 Current window search params:', window.location.search);
+          }, 500);
+          
+          const successMessage = {
+            id: Date.now(),
+            text: `🏠 Successfully navigated to **${title || action}**!`,
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+        } else {
+          console.warn('⚠️ Could not extract action from URL:', cleanUrl);
+        }
+      } else {
+        console.warn('⚠️ URL does not match expected format:', cleanUrl);
       }
       
     } catch (error) {
@@ -285,7 +458,7 @@ const ChatBox = () => {
                       <div className="message-text">
                         {message.text.split('\n').map((line, i) => (
                           <span key={i}>
-                            {line}
+                            <span dangerouslySetInnerHTML={{ __html: renderMessageText(line) }} />
                             {i < message.text.split('\n').length - 1 && <br />}
                           </span>
                         ))}

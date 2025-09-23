@@ -1,18 +1,17 @@
-/* ChatBox Component Styles - Perplexity Enhanced */
+/* ChatBox Component Styles - Modern Clean Design */
 .chatbox-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  max-width: 400px;
-  width: 350px;
+  max-width: 380px;
+  width: 380px;
   z-index: 1000;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .chatbox-container.expanded {
-  transform: translateY(-5px);
-  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.25));
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
 }
 
 /* Session Management Styles */
@@ -189,28 +188,27 @@
 
 /* Main Input Bar - Always Visible when expanded */
 .chat-input-bar {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #ffffff;
+  border-radius: 0 0 16px 16px;
+  padding: 16px 20px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 10;
-  margin-bottom: 8px;
+  margin-bottom: 0;
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* When full chat is expanded, adjust input bar positioning */
 .chatbox-container.expanded .chat-input-bar {
-  border-radius: 20px;
+  border-radius: 0 0 16px 16px;
   margin-bottom: 0px;
 }
 
 .chat-input-bar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .input-form {
@@ -221,34 +219,28 @@
 .input-wrapper {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  padding: 8px 10px 8px 16px;
+  gap: 12px;
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 12px 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .input-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s;
+  display: none;
 }
 
 .input-wrapper:focus-within {
-  background: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-  transform: translateY(-1px);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+  border-color: #4facfe;
 }
 
 .input-wrapper:focus-within::before {
-  left: 100%;
+  display: none;
 }
 
 .chat-input {
@@ -257,29 +249,74 @@
   border: none;
   outline: none;
   color: #374151;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.4;
-  padding: 8px 0;
+  padding: 0;
   font-family: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .chat-input::placeholder {
-  color: rgba(55, 65, 81, 0.6);
+  color: #9ca3af;
+  font-weight: 400;
 }
 
-/* Expand/Collapse Button */
-.expand-button {
+/* Attachment button */
+.attachment-button {
   background: transparent;
   border: none;
-  color: rgba(55, 65, 81, 0.7);
+  color: #6b7280;
   cursor: pointer;
   padding: 6px;
-  border-radius: 8px;
+  border-radius: 50%;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.attachment-button:hover {
+  color: #374151;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Send button */
+.send-button {
+  background: linear-gradient(135deg, #4facfe 0%, #00a8ff 100%);
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
+}
+
+.send-button:hover {
+  background: linear-gradient(135deg, #00a8ff 0%, #0078d4 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+}
+
+.send-button:disabled {
+  background: #e5e7eb;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Expand/Collapse Button */
+.expand-button {
+  display: none;
 }
 
 .expand-button:hover {
@@ -413,17 +450,16 @@
 /* Chat Window Styles - Full expansion after first message */
 .chat-window {
   position: absolute;
-  bottom: 80px; /* Position above the input bar */
+  bottom: 60px; /* Position above the input bar */
   left: 0;
   right: 0;
-  height: 650px;
+  height: 500px;
   max-height: calc(100vh - 140px);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(15px);
-  border-radius: 16px 16px 6px 6px;
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: none;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -487,36 +523,84 @@
 .chat-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(249, 250, 251, 0.8);
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #4facfe 0%, #00a8ff 100%);
+  border-radius: 16px 16px 0 0;
+  border: none;
+  position: relative;
 }
 
-.header-content h3 {
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.agent-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.agent-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.agent-info h3 {
   margin: 0;
   font-size: 16px;
-  color: #374151;
+  color: #ffffff;
   font-weight: 600;
+  line-height: 1.2;
+}
+
+.agent-info .agent-status {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-menu-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.header-menu-button:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .connection-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #6b7280;
+  display: none;
 }
 
 .status-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #10b981;
+  display: none;
 }
 
 .status-indicator.disconnected {
-  background: #ef4444;
+  display: none;
 }
 
 .header-buttons {
@@ -547,13 +631,14 @@
 /* Messages Area */
 .messages-container {
   overflow-y: auto;
-  padding: 16px;
+  padding: 20px 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   flex: 1;
   min-height: 200px;
   scroll-behavior: smooth;
+  background: #ffffff;
   /* Remove max-height to allow flex to control sizing */
 }
 
@@ -652,33 +737,8 @@
   max-width: 100%;
   animation: messageSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.3s ease;
-  margin-bottom: 12px;
-  padding: 0 8px;
-}
-
-.message:hover {
-  transform: translateY(-1px);
-}
-
-/* User messages on the right */
-.message.user {
-  justify-content: flex-end;
-  margin-left: auto;
-  margin-right: 0;
-}
-
-.message.user .message-avatar {
-  order: 2;
-  margin-left: 8px;
-  margin-right: 0;
-}
-
-.message.user .message-content {
-  order: 1;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  color: white;
-  border-radius: 18px 18px 4px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 16px;
+  align-items: flex-end;
 }
 
 /* Bot messages on the left */
@@ -691,85 +751,326 @@
 .message.bot .message-avatar {
   order: 1;
   margin-left: 0;
-  margin-right: 8px;
+  margin-right: 12px;
+  margin-bottom: 4px;
 }
 
 .message.bot .message-content {
   order: 2;
-  background: rgba(255, 255, 255, 0.9);
-  color: #374151;
-  border-radius: 18px 18px 18px 4px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f5f5f5;
+  color: #333333;
+  border-radius: 20px 20px 20px 4px;
+  border: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* User messages on the right */
+.message.user {
+  justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.message.user .message-content {
+  order: 1;
+  background: linear-gradient(135deg, #4facfe 0%, #00a8ff 100%);
+  color: white;
+  border-radius: 20px 20px 4px 20px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
 }
 
 .message-avatar {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   flex-shrink: 0;
-  margin-top: 2px;
   transition: all 0.3s ease;
+  background: #d1d5db;
+  overflow: hidden;
+}
+
+.message-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Bot avatar styling */
 .message.bot .message-avatar {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  background: #d1d5db;
+  box-shadow: none;
+  font-size: 14px;
+  color: #6b7280;
 }
 
-/* User avatar styling */
+/* Remove user avatar since user messages don't show avatars in the reference */
 .message.user .message-avatar {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.message:hover .message-avatar {
-  transform: scale(1.1);
-}
-
-.message.bot:hover .message-avatar {
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-}
-
-.message.user:hover .message-avatar {
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  display: none;
 }
 
 .message-content {
   max-width: 75%;
   padding: 12px 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
 .message-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.8s;
-}
-
-.message:hover .message-content::before {
-  left: 100%;
+  display: none;
 }
 
 .message-text {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
-  margin-bottom: 4px;
+  margin: 0;
   position: relative;
   z-index: 1;
+  font-weight: 400;
+}
+
+/* Comprehensive Math Formatting Styles */
+.message-text .math-inline {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  background: rgba(99, 102, 241, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin: 0 2px;
+  display: inline-block;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.message-text .math-display {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  background: rgba(99, 102, 241, 0.05);
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin: 6px 0;
+  text-align: center;
+  display: block;
+  border-left: 3px solid #6366f1;
+  font-size: 1.05em;
+  line-height: 1.4;
+}
+
+.message-text .math-text {
+  font-family: inherit;
+  font-style: normal;
+}
+
+/* Enhanced Fraction Styling */
+.message-text .fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 4px;
+  position: relative;
+}
+
+.message-text .fraction .numerator {
+  padding: 0 6px 3px 6px;
+  font-size: 0.9em;
+  line-height: 1;
+  text-align: center;
+}
+
+.message-text .fraction .fraction-line {
+  width: 100%;
+  height: 1.5px;
+  background-color: currentColor;
+  margin: 2px 0;
+  min-width: 25px;
+  border-radius: 1px;
+}
+
+.message-text .fraction .denominator {
+  padding: 3px 6px 0 6px;
+  font-size: 0.9em;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Square Root Styling */
+.message-text .sqrt {
+  position: relative;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.message-text .sqrt .sqrt-content {
+  border-top: 1.5px solid currentColor;
+  padding: 2px 4px 0 4px;
+  margin-left: 2px;
+}
+
+.message-text .nth-root {
+  position: relative;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.message-text .nth-root .root-index {
+  font-size: 0.6em;
+  position: absolute;
+  top: -0.5em;
+  left: -0.2em;
+}
+
+/* Summation and Integral Styling */
+.message-text .summation, .message-text .integral {
+  display: inline-block;
+  position: relative;
+  font-size: 1.4em;
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+.message-text .sum-upper, .message-text .int-upper {
+  position: absolute;
+  top: -0.7em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6em;
+  line-height: 1;
+}
+
+.message-text .sum-lower, .message-text .int-lower {
+  position: absolute;
+  bottom: -0.7em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6em;
+  line-height: 1;
+}
+
+/* Limit Styling */
+.message-text .limit {
+  display: inline-block;
+  position: relative;
+  margin: 0 2px;
+}
+
+.message-text .limit-sub {
+  font-size: 0.7em;
+  position: absolute;
+  bottom: -0.8em;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Matrix Styling */
+.message-text .matrix {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+.message-text .matrix .matrix-bracket {
+  font-size: 2em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.message-text .matrix .matrix-bracket.left {
+  margin-right: 4px;
+}
+
+.message-text .matrix .matrix-bracket.right {
+  margin-left: 4px;
+}
+
+.message-text .matrix .matrix-content {
+  border-collapse: collapse;
+}
+
+.message-text .matrix .matrix-content td {
+  padding: 4px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Enhanced Super/Subscript Styling */
+.message-text sup {
+  font-size: 0.75em;
+  vertical-align: super;
+  line-height: 1;
+  margin: 0 1px;
+}
+
+.message-text sub {
+  font-size: 0.75em;
+  vertical-align: sub;
+  line-height: 1;
+  margin: 0 1px;
+}
+
+/* Text Formatting */
+.message-text strong {
+  font-weight: 600;
+  color: inherit;
+}
+
+.message-text em {
+  font-style: italic;
+}
+
+.message-text code {
+  font-family: 'Courier New', monospace;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Mathematical Operators and Symbols */
+.message-text .math-inline, 
+.message-text .math-display {
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* Responsive Math Scaling */
+@media (max-width: 768px) {
+  .message-text .math-display {
+    font-size: 1em;
+    padding: 10px 12px;
+  }
+  
+  .message-text .summation, 
+  .message-text .integral {
+    font-size: 1.2em;
+  }
+  
+  .message-text .matrix .matrix-bracket {
+    font-size: 1.6em;
+  }
+}
+
+@media (max-width: 480px) {
+  .message-text .math-display {
+    font-size: 0.95em;
+    padding: 8px 10px;
+  }
+  
+  .message-text .fraction {
+    margin: 0 2px;
+  }
+  
+  .message-text .fraction .numerator,
+  .message-text .fraction .denominator {
+    padding: 0 4px;
+    font-size: 0.85em;
+  }
 }
 
 .message-timestamp {
@@ -787,7 +1088,7 @@
   opacity: 0.6;
   color: #9ca3af;
   text-align: right;
-  margin-top: 2px;
+  margin-top: 1px;
   font-family: monospace;
 }
 
@@ -870,7 +1171,7 @@
   }
   
   .messages-container {
-    padding: 12px;
+    padding: 4px 6px;
   }
   
   .message-text {
@@ -904,21 +1205,21 @@
   
   .chat-input-bar {
     margin: 0;
-    padding: 8px;
+    padding: 4px;
   }
   
   .chat-input {
     font-size: 16px; /* Prevents zoom on iOS */
-    padding: 8px 12px;
+    padding: 4px 8px;
   }
   
   .chat-send-btn {
-    padding: 8px;
-    min-width: 36px;
+    padding: 6px;
+    min-width: 32px;
   }
   
   .messages-container {
-    padding: 8px;
+    padding: 4px;
   }
   
   .message-text {
@@ -947,7 +1248,7 @@
   }
   
   .chat-header {
-    padding: 8px 10px;
+    padding: 4px 8px;
   }
   
   .chat-title {
@@ -955,7 +1256,7 @@
   }
   
   .messages-container {
-    padding: 6px;
+    padding: 2px 4px;
   }
   
   .message-text {
